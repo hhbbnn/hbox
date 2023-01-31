@@ -11,11 +11,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.github.tvbox.osc.R;
+import com.github.tvbox.osc.bean.ApiModel;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.tv.QRCodeGen;
+import com.github.tvbox.osc.util.SourceUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
@@ -41,13 +43,16 @@ public class ApiDialog extends BaseDialog {
     private final ImageView ivQRCode;
     private final TextView tvAddress;
     private final EditText inputApi;
+    private final EditText inputApiName;
     private final EditText inputLive;
     private final EditText inputEPG;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshEvent event) {
         if (event.type == RefreshEvent.TYPE_API_URL_CHANGE) {
-            inputApi.setText((String) event.obj);
+            ApiModel action = (ApiModel) event.obj;
+            inputApiName.setText(action.getName());
+            inputApi.setText(action.getUrl());
         }
         if (event.type == RefreshEvent.TYPE_LIVE_URL_CHANGE) {
             inputLive.setText((String) event.obj);
@@ -65,6 +70,8 @@ public class ApiDialog extends BaseDialog {
         tvAddress = findViewById(R.id.tvAddress);
         inputApi = findViewById(R.id.input);
         inputApi.setText(Hawk.get(HawkConfig.API_URL, ""));
+        inputApiName = findViewById(R.id.inputApiName);
+        inputApiName.setText(Hawk.get(HawkConfig.API_NAME, ""));
 
         // takagen99: Add Live & EPG Address
         inputLive = findViewById(R.id.input_live);
@@ -76,6 +83,7 @@ public class ApiDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 String newApi = inputApi.getText().toString().trim();
+                String newApiName = inputApiName.getText().toString().trim();
                 String newLive = inputLive.getText().toString().trim();
                 String newEPG = inputEPG.getText().toString().trim();
                 // takagen99: Convert all to clan://localhost format
@@ -85,12 +93,13 @@ public class ApiDialog extends BaseDialog {
                     newApi = newApi.replace("./", "clan://localhost/");
                 }
                 if (!newApi.isEmpty()) {
-                    ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
-                    if (!history.contains(newApi))
-                        history.add(0, newApi);
-                    if (history.size() > 20)
-                        history.remove(20);
-                    Hawk.put(HawkConfig.API_HISTORY, history);
+                    if(newApiName.isEmpty())
+                        newApiName = newApi;
+                    ApiModel api = new ApiModel();
+                    api.setUrl(newApi);
+                    api.setName(newApiName);
+                    SourceUtil.setCurrentApi(api);
+                    SourceUtil.addHistory(api);
                     listener.onchange(newApi);
                     dismiss();
                 }
@@ -119,10 +128,10 @@ public class ApiDialog extends BaseDialog {
         findViewById(R.id.apiHistory).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
+                List<String> history = SourceUtil.getHistoryApiUrls();
                 if (history.isEmpty())
                     return;
-                String current = Hawk.get(HawkConfig.API_URL, "");
+                String current = SourceUtil.getCurrentApi().getUrl();
                 int idx = 0;
                 if (history.contains(current))
                     idx = history.indexOf(current);
@@ -131,6 +140,7 @@ public class ApiDialog extends BaseDialog {
                 dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
                     @Override
                     public void click(String value) {
+                        inputApiName.setText(SourceUtil.getApiName(value));
                         inputApi.setText(value);
                         listener.onchange(value);
                         dialog.dismiss();
@@ -138,7 +148,7 @@ public class ApiDialog extends BaseDialog {
 
                     @Override
                     public void del(String value, ArrayList<String> data) {
-                        Hawk.put(HawkConfig.API_HISTORY, data);
+                        SourceUtil.removeHistory(value);
                     }
                 }, history, idx);
                 dialog.show();

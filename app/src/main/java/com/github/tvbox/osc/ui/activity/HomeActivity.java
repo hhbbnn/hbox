@@ -40,9 +40,11 @@ import com.github.tvbox.osc.bean.MovieSort;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.server.ControlManager;
+import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.HomePageAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.SortAdapter;
+import com.github.tvbox.osc.ui.dialog.ApiHistoryDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.TipDialog;
 import com.github.tvbox.osc.ui.fragment.GridFragment;
@@ -51,6 +53,7 @@ import com.github.tvbox.osc.ui.tv.widget.DefaultTransformer;
 import com.github.tvbox.osc.ui.tv.widget.FixedSpeedScroller;
 import com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager;
 import com.github.tvbox.osc.ui.tv.widget.ViewObj;
+import com.github.tvbox.osc.util.SourceUtil;
 import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.FileUtils;
@@ -87,6 +90,8 @@ public class HomeActivity extends BaseActivity {
     private ImageView tvWifi;
     private ImageView tvFind;
     private ImageView tvMenu;
+    private ImageView tvApiHistory;
+    private ImageView tvCleanCache;
     private TextView tvDate;
     private TvRecyclerView mGridView;
     private NoScrollViewPager mViewPager;
@@ -149,6 +154,8 @@ public class HomeActivity extends BaseActivity {
         this.tvWifi = findViewById(R.id.tvWifi);
         this.tvFind = findViewById(R.id.tvFind);
         this.tvMenu = findViewById(R.id.tvMenu);
+        this.tvApiHistory = findViewById(R.id.tvApiHistory);
+        this.tvCleanCache = findViewById(R.id.tvCleanCache);
         this.tvDate = findViewById(R.id.tvDate);
         this.contentLayout = findViewById(R.id.contentLayout);
         this.mGridView = findViewById(R.id.mGridViewCategory);
@@ -218,7 +225,7 @@ public class HomeActivity extends BaseActivity {
             }
         });
         // Button : TVBOX >> Delete Cache / Longclick to Refresh Source --
-        tvName.setOnClickListener(new View.OnClickListener() {
+        tvCleanCache.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                dataInitOk = false;
@@ -229,7 +236,7 @@ public class HomeActivity extends BaseActivity {
                 Toast.makeText(HomeActivity.this, getString(R.string.hm_cache_del), Toast.LENGTH_SHORT).show();
             }
         });
-        tvName.setOnLongClickListener(new View.OnLongClickListener() {
+        tvCleanCache.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -239,6 +246,12 @@ public class HomeActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 HomeActivity.this.startActivity(intent);
                 return true;
+            }
+        });
+        tvApiHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showApiSwitch();
             }
         });
         // Button : Wifi >> Go into Android Wifi Settings -------------
@@ -413,9 +426,18 @@ public class HomeActivity extends BaseActivity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            dataInitOk = true;
-                            jarInitOk = true;
-                            initData();
+//                            dataInitOk = true;
+//                            jarInitOk = true;
+
+                            SourceUtil.resetSource(new SourceUtil.Callback<String>() {
+                                @Override
+                                public void success(String data) {
+                                    initData();
+                                }
+                                @Override
+                                public void error(String msg) {
+                                }
+                            });
                         }
                     });
                     return;
@@ -632,6 +654,7 @@ public class HomeActivity extends BaseActivity {
             tvWifi.setFocusable(false);
             tvFind.setFocusable(false);
             tvMenu.setFocusable(false);
+            tvCleanCache.setFocusable(false);
             return;
         }
         // Show Top =======================================================
@@ -645,10 +668,11 @@ public class HomeActivity extends BaseActivity {
                     ObjectAnimator.ofFloat(this.topLayout, "alpha", 0.0f, 1.0f));
             animatorSet.setDuration(250);
             animatorSet.start();
-            tvName.setFocusable(true);
+            tvName.setFocusable(false);
             tvWifi.setFocusable(true);
             tvFind.setFocusable(true);
             tvMenu.setFocusable(true);
+            tvCleanCache.setFocusable(true);
             return;
         }
     }
@@ -661,6 +685,36 @@ public class HomeActivity extends BaseActivity {
         ControlManager.get().stopServer();
     }
 
+    void showApiSwitch(){
+        List<String> history = SourceUtil.getHistoryApiUrls();
+        if (history.isEmpty())
+            return;
+        String current = SourceUtil.getCurrentApi().getUrl();
+        int idx = 0;
+        if (history.contains(current))
+            idx = history.indexOf(current);
+        ApiHistoryDialog dialog = new ApiHistoryDialog(HomeActivity.this);
+        dialog.setTip(getString(R.string.dia_history_list));
+        dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
+            @Override
+            public void click(String api) {
+                SourceUtil.setCurrentApi(api);
+                ApiConfig.get().clearSourceBeanList();
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("useCache", true);
+                intent.putExtras(bundle);
+                HomeActivity.this.startActivity(intent);
+            }
+
+            @Override
+            public void del(String value, ArrayList<String> data) {
+                SourceUtil.removeHistory(value);
+            }
+        }, history, idx);
+        dialog.show();
+    }
     // Site Switch on Home Button
     void showSiteSwitch() {
         List<SourceBean> sites = ApiConfig.get().getSourceBeanList();

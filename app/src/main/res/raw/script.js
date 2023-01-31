@@ -1,17 +1,26 @@
 function search() {
     doAction('search', { word: $('#search_key_word').val() });
+    warnToast('执行完成！');
 }
 
 function api() {
-    doAction('api', { url: $('#diy_api_url').val() });
+    doAction('api', { name: $('#diy_api_name').val(),url: $('#diy_api_url').val() });
+    warnToast('执行完成！');
 }
 
 function live() {
     doAction('live', { url: $('#diy_live_url').val() });
+    warnToast('执行完成！');
 }
 
 function epg() {
     doAction('epg', { url: $('#diy_epg_url').val() });
+    warnToast('执行完成！');
+}
+
+function repo() {
+    doAction('repo', { url: $('#diy_repo_rul').val() });
+    warnToast('执行完成！');
 }
 
 function push() {
@@ -131,7 +140,10 @@ function listFile(path) {
             }
         });
         $('#loadingToast').hide();
-    })
+    }).fail(function () {
+        warnToast('读取本地文件失败，可能没有存储权限');
+        $('#loadingToast').hide();
+    });
 }
 
 function warnToast(msg) {

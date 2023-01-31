@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.tvbox.osc.R;
+import com.github.tvbox.osc.util.SourceUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -75,7 +76,7 @@ public class ApiHistoryDialogAdapter extends ListAdapter<String, ApiHistoryDialo
     @Override
     public void onBindViewHolder(@NonNull @NotNull ApiHistoryDialogAdapter.SelectViewHolder holder, int position) {
         String value = data.get(position);
-        String name = value;
+        String name = SourceUtil.getApiName(value);
         if (select.equals(value))
             name = "√ " + name;
         ((TextView) holder.itemView.findViewById(R.id.tvName)).setText(name);

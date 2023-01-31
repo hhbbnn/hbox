@@ -36,6 +36,7 @@ import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
+import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -60,6 +61,8 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     private LinearLayout tvPush;
     private HomeHotVodAdapter homeHotVodAdapter;
     private List<Movie.Video> homeSourceRec;
+    TvRecyclerView tvHotListForGrid;
+    TvRecyclerView tvHotListForLine;
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -76,6 +79,15 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
 
     @Override
     protected void onFragmentResume() {
+        if(Hawk.get(HawkConfig.HOME_REC_STYLE, true)){
+            tvHotListForGrid.setVisibility(View.VISIBLE);
+            tvHotListForLine.setVisibility(View.GONE);
+            tvHotListForGrid.setHasFixedSize(true);
+            tvHotListForGrid.setLayoutManager(new V7GridLayoutManager(this.mContext, 5));
+        }else {
+            tvHotListForGrid.setVisibility(View.GONE);
+            tvHotListForLine.setVisibility(View.VISIBLE);
+        }
         super.onFragmentResume();
         if (Hawk.get(HawkConfig.HOME_REC, 0) == 2) {
             List<VodInfo> allVodRecord = RoomDataManger.getAllVodRecord(20);
@@ -123,7 +135,8 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvHistory.setOnFocusChangeListener(focusChangeListener);
         tvPush.setOnFocusChangeListener(focusChangeListener);
         tvCollect.setOnFocusChangeListener(focusChangeListener);
-        TvRecyclerView tvHotList = findViewById(R.id.tvHotList);
+        tvHotListForGrid = findViewById(R.id.tvHotListForGrid);
+        tvHotListForLine = findViewById(R.id.tvHotListForLine);
         homeHotVodAdapter = new HomeHotVodAdapter();
         homeHotVodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -142,7 +155,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                         jumpActivity(DetailActivity.class, bundle);
                     }
                 } else {
-                    Intent newIntent = new Intent(mContext, SearchActivity.class);
+                    Intent newIntent = new Intent(mContext, FastSearchActivity.class);
                     newIntent.putExtra("title", vod.name);
                     newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mActivity.startActivity(newIntent);
@@ -158,12 +171,16 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 Movie.Video vod = ((Movie.Video) adapter.getItem(position));
                 // Additional Check if : Home Rec 0=豆瓣, 1=推荐, 2=历史
                 if ((vod.id != null && !vod.id.isEmpty()) && (Hawk.get(HawkConfig.HOME_REC, 0) == 2)) {
-                    homeHotVodAdapter.remove(position);
-                    VodInfo vodInfo = RoomDataManger.getVodInfo(vod.sourceKey, vod.id);
-                    RoomDataManger.deleteVodRecord(vod.sourceKey, vodInfo);
-                    Toast.makeText(mContext, getString(R.string.hm_hist_del), Toast.LENGTH_SHORT).show();
-                } else {
+//                    homeHotVodAdapter.remove(position);
+//                    VodInfo vodInfo = RoomDataManger.getVodInfo(vod.sourceKey, vod.id);
+//                    RoomDataManger.deleteVodRecord(vod.sourceKey, vodInfo);
+//                    Toast.makeText(mContext, getString(R.string.hm_hist_del), Toast.LENGTH_SHORT).show();
                     Intent newIntent = new Intent(mContext, FastSearchActivity.class);
+                    newIntent.putExtra("title", vod.name);
+                    newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mActivity.startActivity(newIntent);
+                } else {
+                    Intent newIntent = new Intent(mContext, SearchActivity.class);
                     newIntent.putExtra("title", vod.name);
                     newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mActivity.startActivity(newIntent);
@@ -171,7 +188,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 return true;
             }
         });
-        tvHotList.setOnItemListener(new TvRecyclerView.OnItemListener() {
+        tvHotListForGrid.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
@@ -187,7 +204,24 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
 
             }
         });
-        tvHotList.setAdapter(homeHotVodAdapter);
+        tvHotListForGrid.setAdapter(homeHotVodAdapter);
+        tvHotListForLine.setOnItemListener(new TvRecyclerView.OnItemListener() {
+            @Override
+            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+                itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+            }
+
+            @Override
+            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+                itemView.animate().scaleX(1.05f).scaleY(1.05f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+            }
+
+            @Override
+            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+
+            }
+        });
+        tvHotListForLine.setAdapter(homeHotVodAdapter);
 
         initHomeHotVod(homeHotVodAdapter);
     }

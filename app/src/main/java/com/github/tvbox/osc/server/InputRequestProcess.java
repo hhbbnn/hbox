@@ -42,7 +42,7 @@ public class InputRequestProcess implements RequestProcess {
                             break;
                         }
                         case "api": {
-                            mDataReceiver.onApiReceived(params.get("url").trim());
+                            mDataReceiver.onApiReceived(params.get("name").trim(),params.get("url").trim());
                             break;
                         }
                         case "live": {
@@ -56,6 +56,10 @@ public class InputRequestProcess implements RequestProcess {
                         case "push": {
                             // 暂未实现
                             mDataReceiver.onPushReceived(params.get("url").trim());
+                            break;
+                        }
+                        case "repo": {
+                            mDataReceiver.onRepoReceived(params.get("url").trim());
                             break;
                         }
                     }

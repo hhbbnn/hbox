@@ -88,3 +88,6 @@ lint/tmp/
 /LTDecodeSpace
 /adb.exe
 /LTDecodeNew3.exe
+
+app/release
+/.idea/deploymentTargetDropDown.xml

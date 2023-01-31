@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/vs_400"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_dialog_bg_main"
+        android:orientation="horizontal"
+        android:padding="@dimen/vs_30">
+
+        <ImageView
+            android:id="@+id/sourceIvQRCode"
+            android:layout_width="@dimen/vs_200"
+            android:layout_height="@dimen/vs_200"
+            android:layout_gravity="center"
+            android:focusable="false" />
+
+        <LinearLayout
+            android:layout_width="@dimen/vs_600"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/vs_20"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sourceTvAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_20"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.5"
+                android:shadowColor="@color/color_000000_60"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="@color/color_FFFFFF"
+                android:textSize="@dimen/ts_24"
+                android:textStyle="bold"
+                tools:text="1111111111111111111111111111111111111111111111111111" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_10"
+                android:gravity="left"
+                android:lineSpacingMultiplier="1.5"
+                android:shadowColor="@color/color_000000_60"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:textColor="@color/color_FFFFFF"
+                android:textSize="@dimen/ts_24"
+                android:textStyle="bold"
+                android:text="支持多仓导入，多仓时将所有仓所有线路去重并一起导入，导入后没有多仓分组！"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_5">
+
+                    <EditText
+                        android:id="@+id/inputSourceUrl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/input_dialog_api_input"
+                        android:hint="请输入仓库或线路地址..."
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/vs_2"
+                        android:paddingTop="@dimen/vs_10"
+                        android:paddingRight="@dimen/vs_2"
+                        android:paddingBottom="@dimen/vs_10"
+                        android:shadowColor="@color/color_000000_60"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="3"
+                        android:textColor="@color/color_FFFFFF"
+                        android:textColorHint="@color/color_FFFFFF_50"
+                        android:textSize="@dimen/ts_22" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vs_10"
+                android:padding="@dimen/vs_5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sourceStoragePermission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/vs_5"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_dialog_main"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:padding="@dimen/vs_10"
+                    android:text="存储权限"
+                    android:textColor="@color/color_FFFFFF"
+                    android:textSize="@dimen/ts_22" />
+
+                <TextView
+                    android:id="@+id/sourceResetSubmit"
+                    android:layout_width="@dimen/vs_160"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/vs_5"
+                    android:background="@drawable/button_dialog_main"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:padding="@dimen/vs_10"
+                    android:text="重置默认"
+                    android:textColor="@color/color_FFFFFF"
+                    android:textSize="@dimen/ts_22" />
+
+                <TextView
+                    android:id="@+id/sourceReplaceSubmit"
+                    android:layout_width="@dimen/vs_80"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/vs_5"
+                    android:background="@drawable/button_dialog_main"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:padding="@dimen/vs_10"
+                    android:text="覆盖"
+                    android:textColor="@color/color_FFFFFF"
+                    android:textSize="@dimen/ts_22" />
+
+                <TextView
+                    android:id="@+id/sourceAddSubmit"
+                    android:layout_width="@dimen/vs_80"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/vs_5"
+                    android:background="@drawable/button_dialog_main"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:padding="@dimen/vs_10"
+                    android:text="追加"
+                    android:textColor="@color/color_FFFFFF"
+                    android:textSize="@dimen/ts_22" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

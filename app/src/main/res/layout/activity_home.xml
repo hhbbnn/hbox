@@ -32,12 +32,10 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
+            android:clickable="false"
+            android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="left|center_vertical"
-            android:nextFocusRight="@id/tvWifi"
-            android:nextFocusDown="@id/mGridViewCategory"
             android:text="@string/app_name"
             android:textAlignment="gravity"
             android:textColor="@color/font_home_selector"
@@ -56,46 +54,82 @@
             android:textSize="@dimen/ts_30"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/tvWifi"
-            android:layout_width="@dimen/vs_40"
-            android:layout_height="@dimen/vs_40"
-            android:layout_marginStart="@dimen/vs_15"
-            android:layout_marginLeft="@dimen/vs_15"
-            android:layout_marginEnd="@dimen/vs_15"
-            android:layout_marginRight="@dimen/vs_15"
-            android:background="@drawable/button_home_select"
-            android:clickable="true"
-            android:focusable="true"
-            android:nextFocusLeft="@id/tvName"
-            android:src="@drawable/hm_wifi_no" />
 
         <ImageView
             android:id="@+id/tvFind"
             android:layout_width="@dimen/vs_40"
             android:layout_height="@dimen/vs_40"
             android:layout_marginStart="@dimen/vs_15"
-            android:layout_marginLeft="@dimen/vs_15"
+            android:layout_marginLeft="@dimen/vs_10"
             android:layout_marginEnd="@dimen/vs_15"
-            android:layout_marginRight="@dimen/vs_15"
+            android:layout_marginRight="@dimen/vs_10"
+            android:nextFocusLeft="@id/tvFind"
+            android:nextFocusUp="@id/tvApiHistory"
             android:background="@drawable/button_home_select"
             android:clickable="true"
             android:focusable="true"
+            android:padding="@dimen/vs_5"
             android:src="@drawable/hm_search" />
+
+        <ImageView
+            android:id="@+id/tvApiHistory"
+            android:layout_width="@dimen/vs_40"
+            android:layout_height="@dimen/vs_40"
+            android:layout_marginStart="@dimen/vs_15"
+            android:layout_marginLeft="@dimen/vs_10"
+            android:layout_marginEnd="@dimen/vs_15"
+            android:layout_marginRight="@dimen/vs_10"
+            android:nextFocusUp="@id/tvMenu"
+            android:background="@drawable/button_home_select"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="@dimen/vs_5"
+            android:src="@drawable/hm_change" />
 
         <ImageView
             android:id="@+id/tvMenu"
             android:layout_width="@dimen/vs_40"
             android:layout_height="@dimen/vs_40"
             android:layout_marginStart="@dimen/vs_15"
-            android:layout_marginLeft="@dimen/vs_15"
+            android:layout_marginLeft="@dimen/vs_10"
             android:layout_marginEnd="@dimen/vs_15"
-            android:layout_marginRight="@dimen/vs_15"
+            android:layout_marginRight="@dimen/vs_10"
+            android:nextFocusUp="@id/tvWifi"
             android:background="@drawable/button_home_select"
             android:clickable="true"
             android:focusable="true"
-            android:nextFocusDown="@id/tvDrive"
+            android:padding="@dimen/vs_5"
             android:src="@drawable/hm_settings" />
+
+        <ImageView
+            android:id="@+id/tvWifi"
+            android:layout_width="@dimen/vs_40"
+            android:layout_height="@dimen/vs_40"
+            android:layout_marginStart="@dimen/vs_15"
+            android:layout_marginLeft="@dimen/vs_10"
+            android:layout_marginEnd="@dimen/vs_15"
+            android:layout_marginRight="@dimen/vs_10"
+            android:nextFocusUp="@id/tvCleanCache"
+            android:background="@drawable/button_home_select"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="@dimen/vs_5"
+            android:src="@drawable/hm_wifi_no" />
+
+        <ImageView
+            android:id="@+id/tvCleanCache"
+            android:layout_width="@dimen/vs_40"
+            android:layout_height="@dimen/vs_40"
+            android:layout_marginStart="@dimen/vs_15"
+            android:layout_marginLeft="@dimen/vs_10"
+            android:layout_marginEnd="@dimen/vs_15"
+            android:layout_marginRight="@dimen/vs_10"
+            android:background="@drawable/button_home_select"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusDown="@id/mGridViewCategory"
+            android:padding="@dimen/vs_5"
+            android:src="@drawable/hm_clean" />
 
         <TextView
             android:id="@+id/tvDate"

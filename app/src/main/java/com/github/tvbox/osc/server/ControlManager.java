@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.github.tvbox.osc.bean.ApiModel;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.receiver.SearchReceiver;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -72,8 +73,11 @@ public class ControlManager {
                 }
 
                 @Override
-                public void onApiReceived(String url) {
-                    EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_API_URL_CHANGE, url));
+                public void onApiReceived(String name,String url) {
+                    ApiModel action = new ApiModel();
+                    action.setName(name);
+                    action.setUrl(url);
+                    EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_API_URL_CHANGE, action));
                 }
 
                 @Override
@@ -89,6 +93,11 @@ public class ControlManager {
                 @Override
                 public void onPushReceived(String url) {
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_PUSH_URL, url));
+                }
+
+                @Override
+                public void onRepoReceived(String url) {
+                    EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SOURCE_UPLOAD, url));
                 }
             });
             try {

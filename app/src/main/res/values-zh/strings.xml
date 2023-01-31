@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TVBox</string>
+    <string name="app_name">宝盒</string>
     <string name="app_home">首页</string>
     <string name="app_source"></string>
 
@@ -47,6 +47,7 @@
     <string name="mn_config">配置地址</string>
     <string name="mn_home">数据源</string>
     <string name="mn_home_show">数据源显示</string>
+    <string name="mn_home_rec_style">首页多行显示</string>
     <string name="mn_home_type">推荐</string>
     <string name="mn_history_num">历史条数</string>
     <string name="mn_wall_change">换张壁纸</string>

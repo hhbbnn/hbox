@@ -26,7 +26,9 @@ import com.github.tvbox.osc.ui.dialog.ApiDialog;
 import com.github.tvbox.osc.ui.dialog.ApiHistoryDialog;
 import com.github.tvbox.osc.ui.dialog.BackupDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
+import com.github.tvbox.osc.ui.dialog.SourceUploadDialog;
 import com.github.tvbox.osc.ui.dialog.XWalkInitDialog;
+import com.github.tvbox.osc.util.SourceUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.HistoryHelper;
@@ -74,6 +76,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvLocale;
     private TextView tvPIP;
     private TextView tvTheme;
+    private TextView tvRecStyleText;
 
     public static ModelSettingFragment newInstance() {
         return new ModelSettingFragment().setArguments();
@@ -92,6 +95,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
     protected void init() {
         tvPIP = findViewById(R.id.tvPIP);
         tvPIP.setText(Hawk.get(HawkConfig.PIC_IN_PIC, false) ? "开启" : "关闭");
+        tvRecStyleText = findViewById(R.id.showRecStyleText);
+        tvRecStyleText.setText(Hawk.get(HawkConfig.HOME_REC_STYLE, true) ? "是" : "否");
         tvLocale = findViewById(R.id.tvLocale);
         tvLocale.setText(getLocaleView(Hawk.get(HawkConfig.HOME_LOCALE, 0)));
         tvHomeShow = findViewById(R.id.tvHomeShow);
@@ -164,10 +169,10 @@ public class ModelSettingFragment extends BaseLazyFragment {
         findViewById(R.id.llApiHistory).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
+                List<String> history = SourceUtil.getHistoryApiUrls();
                 if (history.isEmpty())
                     return;
-                String current = Hawk.get(HawkConfig.API_URL, "");
+                String current = SourceUtil.getCurrentApi().getUrl();
                 int idx = 0;
                 if (history.contains(current))
                     idx = history.indexOf(current);
@@ -176,16 +181,77 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
                     @Override
                     public void click(String api) {
-                        Hawk.put(HawkConfig.API_URL, api);
+                        SourceUtil.setCurrentApi(api);
                         tvApi.setText(api);
                         dialog.dismiss();
                     }
 
                     @Override
                     public void del(String value, ArrayList<String> data) {
-                        Hawk.put(HawkConfig.API_HISTORY, data);
+                        SourceUtil.removeHistory(value);
                     }
                 }, history, idx);
+                dialog.show();
+            }
+        });
+        findViewById(R.id.llApiUpload).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                SourceUploadDialog dialog = new SourceUploadDialog(mActivity);
+                EventBus.getDefault().register(dialog);
+                dialog.setOnListener(new SourceUploadDialog.OnListener() {
+                    @Override
+                    public void onAdd(String api) {
+                        Toast.makeText(mActivity,"导入中...",Toast.LENGTH_LONG).show();
+                        SourceUtil.addSource(api,new SourceUtil.Callback<String>(){
+                            @Override
+                            public void success(String msg) {
+                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
+                            }
+                            @Override
+                            public void error(String msg) {
+                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    @Override
+                    public void onReplace(String api) {
+                        Toast.makeText(mActivity,"导入中...",Toast.LENGTH_LONG).show();
+                        SourceUtil.replaceAllSource(api,new SourceUtil.Callback<String>(){
+                            @Override
+                            public void success(String msg) {
+                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
+                            }
+                            @Override
+                            public void error(String msg) {
+                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onReset() {
+                        Toast.makeText(mActivity,"重置中...",Toast.LENGTH_LONG).show();
+                        SourceUtil.resetSource(new SourceUtil.Callback<String>(){
+                            @Override
+                            public void success(String msg) {
+                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
+                            }
+                            @Override
+                            public void error(String msg) {
+                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ((BaseActivity) mActivity).hideSystemUI(true);
+                        EventBus.getDefault().unregister(dialog);
+                    }
+                });
                 dialog.show();
             }
         });
@@ -607,6 +673,14 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 if (wp.exists())
                     wp.delete();
                 ((BaseActivity) requireActivity()).changeWallpaper(true);
+            }
+        });
+        findViewById(R.id.llHomeRecStyle).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                Hawk.put(HawkConfig.HOME_REC_STYLE, !Hawk.get(HawkConfig.HOME_REC_STYLE, true));
+                tvRecStyleText.setText(Hawk.get(HawkConfig.HOME_REC_STYLE, true) ? "是" : "否");
             }
         });
         // Select Search Display Results ( Text or Picture ) -------------

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.widget.Toast;
 
 import com.github.catvod.crawler.JarLoader;
 import com.github.catvod.crawler.JsLoader;
@@ -163,7 +164,6 @@ public class ApiConfig {
         } else {
             configUrl = apiUrl;
         }
-        System.out.println("API URL :" + configUrl);
         String configKey = TempKey;
         OkGo.<String>get(configUrl)
                 .headers("User-Agent", userAgent)
@@ -710,6 +710,11 @@ public class ApiConfig {
 
     public List<SourceBean> getSourceBeanList() {
         return new ArrayList<>(sourceBeanList.values());
+    }
+
+    public void clearSourceBeanList() {
+        Hawk.delete(HawkConfig.HOME_API);
+        sourceBeanList.clear();
     }
 
     public List<ParseBean> getParseBeanList() {
