@@ -213,7 +213,6 @@ public class SourceUtil {
             }
         }
         if(getCurrentApi().getUrl().isEmpty()){
-            Toast.makeText(AppManager.getInstance().currentActivity(),getCurrentApi().getUrl(),Toast.LENGTH_SHORT).show();
             setCurrentApi(history.get(0));
         }
     }
