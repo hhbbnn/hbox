@@ -155,6 +155,7 @@ function warnToast(msg) {
 }
 
 function uploadFile() {
+    $('#file_uploader').val("");
     $('#file_uploader').click();
 }
 

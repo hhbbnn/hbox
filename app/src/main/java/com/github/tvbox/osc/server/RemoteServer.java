@@ -3,7 +3,10 @@ package com.github.tvbox.osc.server;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Environment;
+
+import androidx.annotation.RequiresApi;
 
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
@@ -26,6 +29,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -346,12 +350,13 @@ public class RemoteServer extends NanoHTTPD {
         return info.toString();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     void unzip(File zipFilePath, String destDirectory) throws Throwable {
         File destDir = new File(destDirectory);
         if (!destDir.exists()) {
             destDir.mkdirs();
         }
-        ZipFile zip = new ZipFile(zipFilePath);
+        ZipFile zip = new ZipFile(zipFilePath, Charset.forName("GBK"));
         Enumeration<ZipEntry> iter = (Enumeration<ZipEntry>) zip.entries();
         while (iter.hasMoreElements()) {
             ZipEntry entry = iter.nextElement();
