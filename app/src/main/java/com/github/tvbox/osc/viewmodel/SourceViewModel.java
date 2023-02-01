@@ -95,7 +95,7 @@ public class SourceViewModel extends ViewModel {
                     });
                     String sortJson = null;
                     try {
-                        sortJson = future.get(15, TimeUnit.SECONDS);
+                        sortJson = future.get(60, TimeUnit.SECONDS);
                     } catch (TimeoutException e) {
                         e.printStackTrace();
                         future.cancel(true);
