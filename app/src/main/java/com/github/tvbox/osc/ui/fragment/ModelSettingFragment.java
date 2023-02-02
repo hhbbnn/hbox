@@ -758,15 +758,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (chkLang != Hawk.get(HawkConfig.HOME_LOCALE, 0)) {
-                            Intent intent = getActivity().getApplicationContext().getPackageManager().getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            Bundle bundle = new Bundle();
-                            bundle.putBoolean("useCache", true);
-                            intent.putExtras(bundle);
-                            getActivity().getApplicationContext().startActivity(intent);
-                            //  android.os.Process.killProcess(android.os.Process.myPid());
-                            //  System.exit(0);
+                            reloadActivity();
                         }
                     }
                 });
@@ -817,15 +809,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (chkTheme != Hawk.get(HawkConfig.THEME_SELECT, 0)) {
-                            Intent intent = getActivity().getApplicationContext().getPackageManager().getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            Bundle bundle = new Bundle();
-                            bundle.putBoolean("useCache", true);
-                            intent.putExtras(bundle);
-                            getActivity().getApplicationContext().startActivity(intent);
-                            //  android.os.Process.killProcess(android.os.Process.myPid());
-                            //  System.exit(0);
+                            reloadActivity();
                         }
                     }
                 });
@@ -899,6 +883,18 @@ public class ModelSettingFragment extends BaseLazyFragment {
         } else {
             return "樱花";
         }
+    }
+
+    void reloadActivity() {
+        Intent intent = getActivity().getApplicationContext().getPackageManager().getLaunchIntentForPackage(getActivity().getApplication().getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("useCache", true);
+        intent.putExtras(bundle);
+        getActivity().getApplicationContext().startActivity(intent);
+        //  android.os.Process.killProcess(android.os.Process.myPid());
+        //  System.exit(0);
     }
 
 }

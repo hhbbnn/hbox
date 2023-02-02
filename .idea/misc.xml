@@ -3,17 +3,50 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_change.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_clean.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_fav.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_folder.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_history.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_lan.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_upload.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/hm_wifi.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/icon_alist.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/icon_circle_node.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/icon_circle_plus.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/icon_img_placeholder.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/img_loading_placeholder.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/img_logo_placeholder.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/input_dialog_api_input.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/play_brightness.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/play_volume.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/scrollviewleft.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/scrollviewright.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/set_play.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_thumb_note.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_thumb_year.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_user_delete.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/v_prev.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/v_replay.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/v_subtitle.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/v_type.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/vod_ffwd.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/vod_play.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout-v21/dialog_search_subtitle.xml" value="0.1" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/activity_detail.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/activity_home.xml" value="0.19202898550724637" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout/activity_live_play.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/dialog_api.xml" value="0.1" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/dialog_search_subtitle.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/dialog_source_upload.xml" value="0.1" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout/dialog_subtitle.xml" value="0.10444027517198248" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/fragment_model.xml" value="0.1" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/fragment_user.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_dialog_select.xml" value="0.11458333333333333" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_grid.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_search_subtitle_result.xml" value="0.19202898550724637" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_user_hot_vod.xml" value="0.19202898550724637" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout/player_vod_control_view.xml" value="0.19202898550724637" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable-xhdpi/box_controller_bottom_bg.xml" value="0.141" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable/button_dialog_main.xml" value="0.141" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable/shape_play_bottom.xml" value="0.141" />
