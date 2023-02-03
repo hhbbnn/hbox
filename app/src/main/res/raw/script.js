@@ -100,9 +100,9 @@ function selectFile(path, canDel) {
 
 function fileToApi(type) {
     if (type === 1) {
-        doAction('api', { url: "clan://localhost/" + current_file });
+        doAction('api', { name:"本地源",url: "clan://localhost/" + current_file });
     } else {
-        doAction('api', { url: current_remote + current_file });
+        doAction('api', { name:"局域网源",url: current_remote + current_file });
     }
 }
 
