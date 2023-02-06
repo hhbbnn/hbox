@@ -300,7 +300,7 @@ public class GridFragment extends BaseLazyFragment {
         sourceViewModel.getList(sortData, page);
     }
 
-    private void toggleFilterStatus() {
+    public void toggleFilterStatus() {
         if (sortData.filters != null && !sortData.filters.isEmpty()) {
             int count = sortData.filterSelectCount();
             EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_FILTER_CHANGE, count));
@@ -328,8 +328,9 @@ public class GridFragment extends BaseLazyFragment {
                 }
             });
         }
-        if (gridFilterDialog != null)
+        if (gridFilterDialog != null) {
             gridFilterDialog.show();
+        }
     }
 
     public void forceRefresh() {

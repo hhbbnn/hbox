@@ -175,6 +175,7 @@ public class HomeActivity extends BaseActivity {
                     textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF_70));
                     textView.invalidate();
                     view.findViewById(R.id.tvFilter).setVisibility(View.GONE);
+                    view.findViewById(R.id.tvFilterActive).setVisibility(View.GONE);
                 }
             }
 
@@ -194,6 +195,11 @@ public class HomeActivity extends BaseActivity {
                     HomeActivity.this.sortFocused = position;
                     mHandler.removeCallbacks(mDataRunnable);
                     mHandler.postDelayed(mDataRunnable, 200);
+                    BaseLazyFragment baseLazyFragment = fragments.get(position);
+                    if ((baseLazyFragment instanceof GridFragment) && !sortAdapter.getItem(position).filters.isEmpty()) {// 弹出筛选
+                        ((GridFragment) baseLazyFragment).toggleFilterStatus();
+                    }
+
                 }
             }
 
