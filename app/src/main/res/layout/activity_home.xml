@@ -109,7 +109,7 @@
             android:layout_marginLeft="@dimen/vs_10"
             android:layout_marginEnd="@dimen/vs_15"
             android:layout_marginRight="@dimen/vs_10"
-            android:nextFocusUp="@id/tvCleanCache"
+            android:nextFocusUp="@id/tvClearCache"
             android:background="@drawable/button_home_select"
             android:clickable="true"
             android:focusable="true"
@@ -117,7 +117,7 @@
             android:src="@drawable/hm_wifi_no" />
 
         <ImageView
-            android:id="@+id/tvCleanCache"
+            android:id="@+id/tvClearCache"
             android:layout_width="@dimen/vs_40"
             android:layout_height="@dimen/vs_40"
             android:layout_marginStart="@dimen/vs_15"

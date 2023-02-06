@@ -53,6 +53,7 @@ import com.github.tvbox.osc.ui.tv.widget.DefaultTransformer;
 import com.github.tvbox.osc.ui.tv.widget.FixedSpeedScroller;
 import com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager;
 import com.github.tvbox.osc.ui.tv.widget.ViewObj;
+import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.SourceUtil;
 import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.DefaultConfig;
@@ -91,7 +92,7 @@ public class HomeActivity extends BaseActivity {
     private ImageView tvFind;
     private ImageView tvMenu;
     private ImageView tvApiHistory;
-    private ImageView tvCleanCache;
+    private ImageView tvClearCache;
     private TextView tvDate;
     private TvRecyclerView mGridView;
     private NoScrollViewPager mViewPager;
@@ -155,7 +156,7 @@ public class HomeActivity extends BaseActivity {
         this.tvFind = findViewById(R.id.tvFind);
         this.tvMenu = findViewById(R.id.tvMenu);
         this.tvApiHistory = findViewById(R.id.tvApiHistory);
-        this.tvCleanCache = findViewById(R.id.tvCleanCache);
+        this.tvClearCache = findViewById(R.id.tvClearCache);
         this.tvDate = findViewById(R.id.tvDate);
         this.contentLayout = findViewById(R.id.contentLayout);
         this.mGridView = findViewById(R.id.mGridViewCategory);
@@ -225,18 +226,34 @@ public class HomeActivity extends BaseActivity {
             }
         });
         // Button : TVBOX >> Delete Cache / Longclick to Refresh Source --
-        tvCleanCache.setOnClickListener(new View.OnClickListener() {
+        tvClearCache.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                dataInitOk = false;
-//                jarInitOk = true;
-//                showSiteSwitch();
-                File dir = mContext.getCacheDir();
-                FileUtils.recursiveDelete(dir);
-                Toast.makeText(HomeActivity.this, getString(R.string.hm_cache_del), Toast.LENGTH_SHORT).show();
+                FastClickCheckUtil.check(v);
+                String cachePath = FileUtils.getCachePath();
+                File cacheDir = new File(cachePath);
+                if (!cacheDir.exists()) {
+                    Toast.makeText(HomeActivity.this, getString(R.string.hm_no_cache), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                try {
+                    new Thread(() -> {
+                        try {
+                            FileUtils.cleanDirectory(cacheDir);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                    Toast.makeText(HomeActivity.this, getString(R.string.hm_cache_clear), Toast.LENGTH_LONG).show();
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(HomeActivity.this, getString(R.string.hm_cache_clear_error), Toast.LENGTH_LONG).show();
+                return;
             }
         });
-        tvCleanCache.setOnLongClickListener(new View.OnLongClickListener() {
+        tvClearCache.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -654,7 +671,7 @@ public class HomeActivity extends BaseActivity {
             tvWifi.setFocusable(false);
             tvFind.setFocusable(false);
             tvMenu.setFocusable(false);
-            tvCleanCache.setFocusable(false);
+            tvClearCache.setFocusable(false);
             return;
         }
         // Show Top =======================================================
@@ -672,7 +689,7 @@ public class HomeActivity extends BaseActivity {
             tvWifi.setFocusable(true);
             tvFind.setFocusable(true);
             tvMenu.setFocusable(true);
-            tvCleanCache.setFocusable(true);
+            tvClearCache.setFocusable(true);
             return;
         }
     }

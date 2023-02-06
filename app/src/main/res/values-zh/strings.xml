@@ -22,6 +22,9 @@
     <string name="hm_setting">设置</string>
     <string name="hm_hist_del">已删除当前记录</string>
     <string name="hm_cache_del">已删除缓存</string>
+    <string name="hm_cache_clear">缓存已清空</string>
+    <string name="hm_no_cache">暂无缓存</string>
+    <string name="hm_cache_clear_error">缓存清空出错</string>
 
     // Play Detail Page //
     <string name="det_play">播放</string>
