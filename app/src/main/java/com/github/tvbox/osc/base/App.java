@@ -6,6 +6,7 @@ import com.github.tvbox.osc.callback.EmptyCallback;
 import com.github.tvbox.osc.callback.LoadingCallback;
 import com.github.tvbox.osc.data.AppDataManager;
 import com.github.tvbox.osc.server.ControlManager;
+import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.SourceUtil;
 import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -55,6 +56,7 @@ public class App extends MultiDexApplication {
 
         // Add JS support
         JSEngine.getInstance().create();
+        FileUtils.cleanPlayerCache();
     }
 
     private void initParams() {
