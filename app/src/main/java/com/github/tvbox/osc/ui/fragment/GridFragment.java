@@ -222,7 +222,6 @@ public class GridFragment extends BaseLazyFragment {
                             jumpActivity(DetailActivity.class, bundle);
                         }
                     }
-
                 }
             }
         });

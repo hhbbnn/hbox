@@ -72,7 +72,6 @@ public class GridFilterDialog extends BaseDialog {
                     String filterSelect = sortData.filterSelect.get(key);
                     if (filterSelect == null || !filterSelect.equals(keys.get(position))) {
                         sortData.filterSelect.put(key, keys.get(position));
-                        selectChange = true;
                         if (pre != null) {
                             TextView val = pre.findViewById(R.id.filterValue);
                             val.getPaint().setFakeBoldText(false);

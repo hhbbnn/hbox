@@ -9,6 +9,10 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -175,7 +179,6 @@ public class HomeActivity extends BaseActivity {
                     textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF_70));
                     textView.invalidate();
                     view.findViewById(R.id.tvFilter).setVisibility(View.GONE);
-                    view.findViewById(R.id.tvFilterActive).setVisibility(View.GONE);
                 }
             }
 
@@ -189,16 +192,17 @@ public class HomeActivity extends BaseActivity {
                     textView.getPaint().setFakeBoldText(true);
                     textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF));
                     textView.invalidate();
-                    if (!sortAdapter.getItem(position).filters.isEmpty())
-                        view.findViewById(R.id.tvFilter).setVisibility(View.VISIBLE);
-                    HomeActivity.this.sortFocusView = view;
-                    HomeActivity.this.sortFocused = position;
-                    mHandler.removeCallbacks(mDataRunnable);
-                    mHandler.postDelayed(mDataRunnable, 200);
+//                    if (!sortAdapter.getItem(position).filters.isEmpty())
+//                        view.findViewById(R.id.tvFilter).setVisibility(View.VISIBLE);
                     BaseLazyFragment baseLazyFragment = fragments.get(position);
                     if ((baseLazyFragment instanceof GridFragment) && !sortAdapter.getItem(position).filters.isEmpty()) {// 弹出筛选
                         ((GridFragment) baseLazyFragment).toggleFilterStatus();
                     }
+
+                    HomeActivity.this.sortFocusView = view;
+                    HomeActivity.this.sortFocused = position;
+                    mHandler.removeCallbacks(mDataRunnable);
+                    mHandler.postDelayed(mDataRunnable, 200);
 
                 }
             }
@@ -615,9 +619,10 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void showFilterIcon(int count) {
-        boolean visible = count > 0;
-        currentView.findViewById(R.id.tvFilterActive).setVisibility(visible ? View.VISIBLE : View.GONE);
-        currentView.findViewById(R.id.tvFilter).setVisibility(visible ? View.GONE : View.VISIBLE);
+        boolean activated = count > 0;
+        currentView.findViewById(R.id.tvFilter).setVisibility(View.VISIBLE);
+        ImageView imgView = currentView.findViewById(R.id.tvFilter);
+        imgView.setColorFilter(activated?this.getThemeColor(): Color.WHITE);
     }
 
     private final Runnable mDataRunnable = new Runnable() {
