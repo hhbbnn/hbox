@@ -758,6 +758,9 @@ public class LivePlayActivity extends BaseActivity {
             showChannelInfo();
             return true;
         }
+        if(mVideoView==null){
+            return true;
+        }
         mVideoView.release();
         if (!changeSource) {
             currentChannelGroupIndex = channelGroupIndex;
