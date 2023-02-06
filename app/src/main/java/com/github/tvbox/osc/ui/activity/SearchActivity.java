@@ -150,7 +150,6 @@ public class SearchActivity extends BaseActivity {
                         if (searchExecutorService != null) {
                             pauseRunnable = searchExecutorService.shutdownNow();
                             searchExecutorService = null;
-                            JSEngine.getInstance().stopAll();
                         }
                     } catch (Throwable th) {
                         th.printStackTrace();

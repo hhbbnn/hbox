@@ -99,6 +99,7 @@ public class HomeActivity extends BaseActivity {
     private SourceViewModel sourceViewModel;
     private SortAdapter sortAdapter;
     private HomePageAdapter pageAdapter;
+    private View currentView;
     private final List<BaseLazyFragment> fragments = new ArrayList<>();
     private boolean isDownOrUp = false;
     private boolean sortChange = false;
@@ -179,6 +180,7 @@ public class HomeActivity extends BaseActivity {
 
             public void onItemSelected(TvRecyclerView tvRecyclerView, View view, int position) {
                 if (view != null) {
+                    HomeActivity.this.currentView = view;
                     HomeActivity.this.isDownOrUp = false;
                     HomeActivity.this.sortChange = true;
                     view.animate().scaleX(1.1f).scaleY(1.1f).setInterpolator(new BounceInterpolator()).setDuration(250).start();
@@ -599,7 +601,17 @@ public class HomeActivity extends BaseActivity {
                 newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 HomeActivity.this.startActivity(newIntent);
             }
+        } else if (event.type == RefreshEvent.TYPE_FILTER_CHANGE) {
+            if (currentView != null) {
+                showFilterIcon((int) event.obj);
+            }
         }
+    }
+
+    private void showFilterIcon(int count) {
+        boolean visible = count > 0;
+        currentView.findViewById(R.id.tvFilterActive).setVisibility(visible ? View.VISIBLE : View.GONE);
+        currentView.findViewById(R.id.tvFilter).setVisibility(visible ? View.GONE : View.VISIBLE);
     }
 
     private final Runnable mDataRunnable = new Runnable() {
