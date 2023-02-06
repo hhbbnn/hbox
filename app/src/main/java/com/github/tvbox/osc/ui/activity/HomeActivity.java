@@ -194,11 +194,10 @@ public class HomeActivity extends BaseActivity {
                     textView.invalidate();
 //                    if (!sortAdapter.getItem(position).filters.isEmpty())
 //                        view.findViewById(R.id.tvFilter).setVisibility(View.VISIBLE);
-                    BaseLazyFragment baseLazyFragment = fragments.get(position);
-                    if ((baseLazyFragment instanceof GridFragment) && !sortAdapter.getItem(position).filters.isEmpty()) {// 弹出筛选
-                        ((GridFragment) baseLazyFragment).toggleFilterStatus();
+                    MovieSort.SortData sortData = sortAdapter.getItem(position);
+                    if (!sortData.filters.isEmpty()) {
+                        showFilterIcon(sortData.filterSelectCount());
                     }
-
                     HomeActivity.this.sortFocusView = view;
                     HomeActivity.this.sortFocused = position;
                     mHandler.removeCallbacks(mDataRunnable);
