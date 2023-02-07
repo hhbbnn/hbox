@@ -77,6 +77,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvPIP;
     private TextView tvTheme;
     private TextView tvRecStyleText;
+    private TextView tvIjkCachePlay;
 
     public static ModelSettingFragment newInstance() {
         return new ModelSettingFragment().setArguments();
@@ -129,6 +130,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvRender.setText(PlayerHelper.getRenderName(Hawk.get(HawkConfig.PLAY_RENDER, 0)));
         tvTheme = findViewById(R.id.tvTheme);
         tvTheme.setText(getThemeView(Hawk.get(HawkConfig.THEME_SELECT, 0)));
+        tvIjkCachePlay = findViewById(R.id.tvIjkCachePlay);
+        tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "开启" : "关闭");
 
         //takagen99 : Set HomeApi as default
         findViewById(R.id.llHomeApi).requestFocus();
@@ -490,6 +493,16 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
+        // IJK Cache
+        findViewById(R.id.llIjkCachePlay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                Hawk.put(HawkConfig.IJK_CACHE_PLAY, !Hawk.get(HawkConfig.IJK_CACHE_PLAY, false));
+                tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "开启" : "关闭");
+            }
+        });
+
         // Select DECODER Type --------------------------------------------
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
             @Override

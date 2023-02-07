@@ -58,6 +58,7 @@
     <string name="mn_wall_reset">Reset</string>
     <string name="mn_play_type">Player</string>
     <string name="mn_play_decode">Decode</string>
+    <string name="mn_ijk_cache">Ijk Cache</string>
     <string name="mn_search">Search Display</string>
     <string name="mn_ratio">Screen Ratio</string>
     <string name="mn_pip">PIP</string>

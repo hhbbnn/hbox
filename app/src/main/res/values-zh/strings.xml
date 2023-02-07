@@ -58,6 +58,7 @@
     <string name="mn_wall_reset">重置壁纸</string>
     <string name="mn_play_type">播放器</string>
     <string name="mn_play_decode">IJK解码</string>
+    <string name="mn_ijk_cache">Ijk 缓存</string>
     <string name="mn_search">搜索展示</string>
     <string name="mn_ratio">画面缩放</string>
     <string name="mn_pip">画中画</string>

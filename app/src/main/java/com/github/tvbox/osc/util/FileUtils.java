@@ -195,4 +195,13 @@ public class FileUtils {
             return "";
         }
     }
+
+    public static File getExternalCacheDir() {
+        return App.getInstance().getExternalCacheDir();
+    }
+
+    public static String getExternalCachePath() {
+        return getExternalCacheDir().getAbsolutePath();
+    }
+
 }
