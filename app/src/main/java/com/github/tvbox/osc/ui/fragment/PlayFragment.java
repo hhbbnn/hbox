@@ -499,15 +499,17 @@ public class PlayFragment extends BaseLazyFragment {
     }
 
     void setTip(String msg, boolean loading, boolean err) {
-        requireActivity().runOnUiThread(new Runnable() { //影魔
-            @Override
-            public void run() {
-                mPlayLoadTip.setText(msg);
-                mPlayLoadTip.setVisibility(View.VISIBLE);
-                mPlayLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
-                mPlayLoadErr.setVisibility(err ? View.VISIBLE : View.GONE);
-            }
-        });
+        if (isAdded()) {
+            requireActivity().runOnUiThread(new Runnable() { //影魔
+                @Override
+                public void run() {
+                    mPlayLoadTip.setText(msg);
+                    mPlayLoadTip.setVisibility(View.VISIBLE);
+                    mPlayLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
+                    mPlayLoadErr.setVisibility(err ? View.VISIBLE : View.GONE);
+                }
+            });
+        }
     }
 
     void hideTip() {
