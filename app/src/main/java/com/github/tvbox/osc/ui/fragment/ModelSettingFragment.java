@@ -18,6 +18,7 @@ import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.SourceBean;
+import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.github.tvbox.osc.ui.activity.SettingActivity;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
@@ -66,6 +67,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvRender;
     private TextView tvScale;
     private TextView tvApi;
+    private TextView tvLive;
+    private TextView tvEpg;
     private TextView tvHomeApi;
     private TextView tvDns;
     private TextView tvHomeRec;
@@ -111,6 +114,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
         tvApi = findViewById(R.id.tvApi);
+        tvLive = findViewById(R.id.tvLive);
+        tvEpg = findViewById(R.id.tvEpg);
         tvHomeApi = findViewById(R.id.tvHomeApi);
         tvDns = findViewById(R.id.tvDns);
         tvHomeRec = findViewById(R.id.tvHomeRec);
@@ -119,7 +124,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
         tvDebugOpen.setText(Hawk.get(HawkConfig.DEBUG_OPEN, false) ? "开启" : "关闭");
         tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
-        tvApi.setText(Hawk.get(HawkConfig.API_URL, ""));
+        tvApi.setText(SourceUtil.getCurrentApi().getName());
+        tvLive.setText(Hawk.get(HawkConfig.LIVE_URL,""));
+        tvEpg.setText(Hawk.get(HawkConfig.EPG_URL,""));
         tvDns.setText(OkGoHelper.dnsHttpsList.get(Hawk.get(HawkConfig.DOH_URL, 0)));
         tvHomeRec.setText(getHomeRecName(Hawk.get(HawkConfig.HOME_REC, 0)));
         tvHomeNum.setText(HistoryHelper.getHomeRecName(Hawk.get(HawkConfig.HOME_NUM, 0)));
@@ -149,29 +156,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
         findViewById(R.id.llApi).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                ApiDialog dialog = new ApiDialog(mActivity);
-                EventBus.getDefault().register(dialog);
-                dialog.setOnListener(new ApiDialog.OnListener() {
-                    @Override
-                    public void onchange(String api) {
-                        Hawk.put(HawkConfig.API_URL, api);
-                        tvApi.setText(api);
-                    }
-                });
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        ((BaseActivity) mActivity).hideSystemUI(true);
-                        EventBus.getDefault().unregister(dialog);
-                    }
-                });
-                dialog.show();
-            }
-        });
-        findViewById(R.id.llApiHistory).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 List<String> history = SourceUtil.getHistoryApiUrls();
                 if (history.isEmpty())
                     return;
@@ -185,7 +169,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     @Override
                     public void click(String api) {
                         SourceUtil.setCurrentApi(api);
-                        tvApi.setText(api);
+                        tvApi.setText(SourceUtil.getCurrentApi().getName());
                         dialog.dismiss();
                     }
 
@@ -194,6 +178,29 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         SourceUtil.removeHistory(value);
                     }
                 }, history, idx);
+                dialog.show();
+            }
+        });
+        findViewById(R.id.llApiAdd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                ApiDialog dialog = new ApiDialog(mActivity);
+                EventBus.getDefault().register(dialog);
+                dialog.setOnListener(new ApiDialog.OnListener() {
+                    @Override
+                    public void onchange(String api) {
+                        SourceUtil.setCurrentApi(api);
+                        tvApi.setText(SourceUtil.getCurrentApi().getName());
+                    }
+                });
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ((BaseActivity) mActivity).hideSystemUI(true);
+                        EventBus.getDefault().unregister(dialog);
+                    }
+                });
                 dialog.show();
             }
         });
@@ -246,6 +253,109 @@ public class ModelSettingFragment extends BaseLazyFragment {
                                 Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
                             }
                         });
+                    }
+                });
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ((BaseActivity) mActivity).hideSystemUI(true);
+                        EventBus.getDefault().unregister(dialog);
+                    }
+                });
+                dialog.show();
+            }
+        });
+        findViewById(R.id.llLive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                ArrayList<String> liveHistory = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
+                if (liveHistory.isEmpty())
+                    return;
+                String current = Hawk.get(HawkConfig.LIVE_URL, "");
+                int idx = 0;
+                if (liveHistory.contains(current))
+                    idx = liveHistory.indexOf(current);
+                ApiHistoryDialog dialog = new ApiHistoryDialog(getContext());
+                dialog.setTip(HomeActivity.getRes().getString(R.string.dia_history_live));
+                dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
+                    @Override
+                    public void click(String liveURL) {
+                        tvLive.setText(liveURL);
+                        Hawk.put(HawkConfig.LIVE_URL, liveURL);
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void del(String value, ArrayList<String> data) {
+                        Hawk.put(HawkConfig.LIVE_HISTORY, data);
+                    }
+                }, liveHistory, idx);
+                dialog.show();
+            }
+        });
+        findViewById(R.id.llLiveAdd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                ApiDialog dialog = new ApiDialog(mActivity);
+                EventBus.getDefault().register(dialog);
+                dialog.setOnListener(new ApiDialog.OnListener() {
+                    @Override
+                    public void onchange(String api) {
+                        SourceUtil.setCurrentApi(api);
+                        tvApi.setText(SourceUtil.getCurrentApi().getName());
+                    }
+                });
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ((BaseActivity) mActivity).hideSystemUI(true);
+                        EventBus.getDefault().unregister(dialog);
+                    }
+                });
+                dialog.show();
+            }
+        });
+        findViewById(R.id.llEpg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> EPGHistory = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
+                if (EPGHistory.isEmpty())
+                    return;
+                String current = Hawk.get(HawkConfig.EPG_URL, "");
+                int idx = 0;
+                if (EPGHistory.contains(current))
+                    idx = EPGHistory.indexOf(current);
+                ApiHistoryDialog dialog = new ApiHistoryDialog(getContext());
+                dialog.setTip(HomeActivity.getRes().getString(R.string.dia_history_epg));
+                dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
+                    @Override
+                    public void click(String epgURL) {
+                        tvEpg.setText(epgURL);
+                        Hawk.put(HawkConfig.EPG_URL, epgURL);
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void del(String value, ArrayList<String> data) {
+                        Hawk.put(HawkConfig.EPG_HISTORY, data);
+                    }
+                }, EPGHistory, idx);
+                dialog.show();
+            }
+        });
+        findViewById(R.id.llEpgAdd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                ApiDialog dialog = new ApiDialog(mActivity);
+                EventBus.getDefault().register(dialog);
+                dialog.setOnListener(new ApiDialog.OnListener() {
+                    @Override
+                    public void onchange(String api) {
+                        SourceUtil.setCurrentApi(api);
+                        tvApi.setText(SourceUtil.getCurrentApi().getName());
                     }
                 });
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
