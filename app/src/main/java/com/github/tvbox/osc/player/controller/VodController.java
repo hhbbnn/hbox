@@ -895,7 +895,11 @@ public class VodController extends BaseController {
     }
 
     public void setTitle(String playTitleInfo) {
-        mPlayTitle.setText(playTitleInfo);
+        try{
+            mPlayTitle.setText(playTitleInfo);
+        }catch (Exception e){
+            // 暂不处理
+        }
     }
 
     public void resetSpeed() {

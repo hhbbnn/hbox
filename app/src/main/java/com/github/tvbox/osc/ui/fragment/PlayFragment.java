@@ -858,7 +858,13 @@ public class PlayFragment extends BaseLazyFragment {
         mController.setTitle(playTitleInfo);
 
         stopParse();
-        if (mVideoView != null) mVideoView.release();
+        if (mVideoView != null) {
+            try {
+                mVideoView.release();
+            }catch (Exception e){
+                // 暂不处理
+            }
+        }
         String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex + "-" + vs.name + "-subt";
         String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex;
         //重新播放清除现有进度
@@ -1262,36 +1268,40 @@ public class PlayFragment extends BaseLazyFragment {
 
     void stopLoadWebView(boolean destroy) {
         if (mActivity == null) return;
-        requireActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        try{
+            requireActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
 
-                if (mXwalkWebView != null) {
-                    mXwalkWebView.stopLoading();
-                    mXwalkWebView.loadUrl("about:blank");
-                    if (destroy) {
-                        // mXwalkWebView.clearCache(true);
-                        mXwalkWebView.removeAllViews();
-                        mXwalkWebView.onDestroy();
-                        mXwalkWebView = null;
-                    }
-                }
-                if (mSysWebView != null) {
-                    mSysWebView.stopLoading();
-                    mSysWebView.loadUrl("about:blank");
-                    if (destroy) {
-                        // mSysWebView.clearCache(true);
-                        final ViewGroup viewGroup = (ViewGroup) mSysWebView.getParent();
-                        if (viewGroup != null) {
-                            viewGroup.removeView(mSysWebView);
+                    if (mXwalkWebView != null) {
+                        mXwalkWebView.stopLoading();
+                        mXwalkWebView.loadUrl("about:blank");
+                        if (destroy) {
+                            // mXwalkWebView.clearCache(true);
+                            mXwalkWebView.removeAllViews();
+                            mXwalkWebView.onDestroy();
+                            mXwalkWebView = null;
                         }
-                        mSysWebView.removeAllViews();
-                        mSysWebView.destroy();
-                        mSysWebView = null;
+                    }
+                    if (mSysWebView != null) {
+                        mSysWebView.stopLoading();
+                        mSysWebView.loadUrl("about:blank");
+                        if (destroy) {
+                            // mSysWebView.clearCache(true);
+                            final ViewGroup viewGroup = (ViewGroup) mSysWebView.getParent();
+                            if (viewGroup != null) {
+                                viewGroup.removeView(mSysWebView);
+                            }
+                            mSysWebView.removeAllViews();
+                            mSysWebView.destroy();
+                            mSysWebView = null;
+                        }
                     }
                 }
-            }
-        });
+            });
+        }catch (Exception e){
+            // 暂不处理
+        }
     }
 
     boolean checkVideoFormat(String url) {
