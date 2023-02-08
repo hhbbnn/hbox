@@ -62,6 +62,7 @@
     <string name="mn_play_decode">IJK解码</string>
     <string name="mn_ijk_cache">IJK 缓存</string>
     <string name="mn_search">搜索展示</string>
+    <string name="mn_fast_search">聚搜模式</string>
     <string name="mn_ratio">画面缩放</string>
     <string name="mn_pip">画中画</string>
     <string name="mn_preview">窗口预览</string>

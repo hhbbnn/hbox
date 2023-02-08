@@ -20,11 +20,14 @@ import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.activity.FastSearchActivity;
+import com.github.tvbox.osc.ui.activity.SearchActivity;
 import com.github.tvbox.osc.ui.adapter.GridAdapter;
 import com.github.tvbox.osc.ui.dialog.GridFilterDialog;
 import com.github.tvbox.osc.ui.tv.widget.LoadMoreView;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
+import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
@@ -219,7 +222,15 @@ public class GridFragment extends BaseLazyFragment {
                         if (video.id == null || video.id.isEmpty() || video.id.startsWith("msearch:")) {
                             jumpActivity(FastSearchActivity.class, bundle);
                         } else {
-                            jumpActivity(DetailActivity.class, bundle);
+                            if(homeSourceBean.isQuickSearch() && Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)){
+                                jumpActivity(FastSearchActivity.class, bundle);
+                            }else{
+                                if(video.id == null || video.id.isEmpty()){
+                                    jumpActivity(FastSearchActivity.class, bundle);
+                                }else {
+                                    jumpActivity(DetailActivity.class, bundle);
+                                }
+                            }
                         }
                     }
                 }

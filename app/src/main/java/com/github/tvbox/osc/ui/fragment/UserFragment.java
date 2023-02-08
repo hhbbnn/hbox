@@ -152,7 +152,13 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                         bundle.putString("title", vod.name);
                         jumpActivity(FastSearchActivity.class, bundle);
                     } else {
-                        jumpActivity(DetailActivity.class, bundle);
+                        // Additional Check if : Home Rec 0=豆瓣, 1=推荐, 2=历史
+                        if(Hawk.get(HawkConfig.HOME_REC, 0)==1 && Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)){
+                            bundle.putString("title", vod.name);
+                            jumpActivity(FastSearchActivity.class, bundle);
+                        }else {
+                            jumpActivity(DetailActivity.class, bundle);
+                        }
                     }
                 } else {
                     Intent newIntent = new Intent(mContext, FastSearchActivity.class);
