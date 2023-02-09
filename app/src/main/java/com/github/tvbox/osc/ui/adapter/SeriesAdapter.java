@@ -25,9 +25,7 @@ public class SeriesAdapter extends BaseQuickAdapter<VodInfo.VodSeries, BaseViewH
     protected void convert(BaseViewHolder helper, VodInfo.VodSeries item) {
         TextView tvSeries = helper.getView(R.id.tvSeries);
         if (item.selected) {
-            // takagen99: Added Theme Color
-//            tvSeries.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-            tvSeries.setTextColor(((BaseActivity) mContext).getThemeColor());
+            tvSeries.setTextColor(mContext.getResources().getColor(R.color.color_theme));
         } else {
             tvSeries.setTextColor(Color.WHITE);
         }

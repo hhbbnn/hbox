@@ -42,11 +42,8 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         wqddg_AudioWaveView.setVisibility(View.GONE);
 
         if (value.index == selectedEpgIndex && value.index != focusedEpgIndex && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(timeFormat.format(now)))) {
-            // takagen99: Added Theme Color
-//            textview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-//            timeview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-            textview.setTextColor(((BaseActivity) mContext).getThemeColor());
-            timeview.setTextColor(((BaseActivity) mContext).getThemeColor());
+            textview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
+            timeview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
         } else {
             textview.setTextColor(mContext.getResources().getColor(R.color.color_FFFFFF));
             timeview.setTextColor(mContext.getResources().getColor(R.color.color_FFFFFF));
@@ -78,11 +75,8 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         if (ShiyiSelection == false) {
             if (now.compareTo(value.startdateTime) >= 0 && now.compareTo(value.enddateTime) <= 0) {
                 wqddg_AudioWaveView.setVisibility(View.VISIBLE);
-                // takagen99: Added Theme Color
-//                textview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-//                timeview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-                textview.setTextColor(((BaseActivity) mContext).getThemeColor());
-                timeview.setTextColor(((BaseActivity) mContext).getThemeColor());
+                textview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
+                timeview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
                 textview.setFreezesText(true);
                 timeview.setFreezesText(true);
                 shiyi.setText("直播中");
@@ -92,11 +86,8 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         } else {
             if (value.index == this.selectedEpgIndex && value.currentEpgDate.equals(shiyiDate)) {
                 wqddg_AudioWaveView.setVisibility(View.VISIBLE);
-                // takagen99: Added Theme Color
-//                textview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-//                timeview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-                textview.setTextColor(((BaseActivity) mContext).getThemeColor());
-                timeview.setTextColor(((BaseActivity) mContext).getThemeColor());
+                textview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
+                timeview.setTextColor(mContext.getResources().getColor(R.color.color_theme));
                 textview.setFreezesText(true);
                 timeview.setFreezesText(true);
                 shiyi.setText("回看中");

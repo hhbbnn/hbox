@@ -79,7 +79,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvHomeShow;
     private TextView tvLocale;
     private TextView tvPIP;
-    private TextView tvTheme;
     private TextView tvRecStyleText;
     private TextView tvIjkCachePlay;
 
@@ -138,8 +137,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvScale.setText(PlayerHelper.getScaleName(Hawk.get(HawkConfig.PLAY_SCALE, 0)));
         tvPlay.setText(PlayerHelper.getPlayerName(Hawk.get(HawkConfig.PLAY_TYPE, 0)));
         tvRender.setText(PlayerHelper.getRenderName(Hawk.get(HawkConfig.PLAY_RENDER, 0)));
-        tvTheme = findViewById(R.id.tvTheme);
-        tvTheme.setText(getThemeView(Hawk.get(HawkConfig.THEME_SELECT, 0)));
         tvIjkCachePlay = findViewById(R.id.tvIjkCachePlay);
         tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "开启" : "关闭");
 
@@ -847,57 +844,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
-        // Select App Theme Color -------------------------------------
-        findViewById(R.id.llTheme).setOnClickListener(new View.OnClickListener() {
-            private final int chkTheme = Hawk.get(HawkConfig.THEME_SELECT, 0);
-
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                int defaultPos = Hawk.get(HawkConfig.THEME_SELECT, 0);
-                ArrayList<Integer> types = new ArrayList<>();
-                types.add(0);
-                types.add(1);
-                types.add(2);
-                types.add(3);
-                types.add(4);
-                types.add(5);
-                types.add(6);
-                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip(getString(R.string.dia_theme));
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
-                    @Override
-                    public void click(Integer value, int pos) {
-                        Hawk.put(HawkConfig.THEME_SELECT, value);
-                        tvTheme.setText(getThemeView(value));
-                    }
-
-                    @Override
-                    public String getDisplay(Integer val) {
-                        return getThemeView(val);
-                    }
-                }, new DiffUtil.ItemCallback<Integer>() {
-                    @Override
-                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-
-                    @Override
-                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-                }, types, defaultPos);
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        if (chkTheme != Hawk.get(HawkConfig.THEME_SELECT, 0)) {
-                            reloadActivity();
-                        }
-                    }
-                });
-                dialog.show();
-            }
-        });
         // About App -----------------------------------------------
         findViewById(R.id.llAbout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -955,24 +901,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
             return "中文";
         } else {
             return "英文";
-        }
-    }
-
-    String getThemeView(int type) {
-        if (type == 0) {
-            return "奈飞";
-        } else if (type == 1) {
-            return "哆啦";
-        } else if (type == 2) {
-            return "百事";
-        } else if (type == 3) {
-            return "鸣人";
-        } else if (type == 4) {
-            return "小黄";
-        } else if (type == 5) {
-            return "八神";
-        } else {
-            return "樱花";
         }
     }
 

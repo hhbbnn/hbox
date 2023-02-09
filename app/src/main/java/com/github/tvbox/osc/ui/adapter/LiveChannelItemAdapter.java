@@ -32,11 +32,8 @@ public class LiveChannelItemAdapter extends BaseQuickAdapter<LiveChannelItem, Ba
         tvChannel.setText(item.getChannelName());
         int channelIndex = item.getChannelIndex();
         if (channelIndex == selectedChannelIndex && channelIndex != focusedChannelIndex) {
-            // takagen99: Added Theme Color
-//            tvChannelNum.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-//            tvChannel.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-            tvChannelNum.setTextColor(((BaseActivity) mContext).getThemeColor());
-            tvChannel.setTextColor(((BaseActivity) mContext).getThemeColor());
+            tvChannelNum.setTextColor(mContext.getResources().getColor(R.color.color_theme));
+            tvChannel.setTextColor(mContext.getResources().getColor(R.color.color_theme));
         }
         else{
             tvChannelNum.setTextColor(Color.WHITE);
