@@ -16,7 +16,7 @@ import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.js.JSEngine;
 import com.kingja.loadsir.core.LoadSir;
 import com.orhanobut.hawk.Hawk;
-//import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.UMConfigure;
 
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
@@ -59,9 +59,8 @@ public class App extends MultiDexApplication {
         JSEngine.getInstance().create();
         FileUtils.cleanPlayerCache();
 
-//        UMConfigure.setLogEnabled(true);
-//        //添加注释
-//        UMConfigure.init(this, "63de496aba6a5259c4f96862", "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
+        UMConfigure.setLogEnabled(true);
+        UMConfigure.init(this, "63de496aba6a5259c4f96862", "umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
     }
 
     private void initParams() {
