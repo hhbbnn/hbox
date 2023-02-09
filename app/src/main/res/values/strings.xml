@@ -90,7 +90,6 @@
     <string name="dia_bkpkg">Select Backup Package</string>
     <string name="dia_dns">Select DNS</string>
     <string name="dia_locale">Select Language</string>
-    <string name="dia_theme">Select Theme</string>
 
     // Settings Backup Restore Page //
     <string name="set_bkup_ok">Backup Success</string>

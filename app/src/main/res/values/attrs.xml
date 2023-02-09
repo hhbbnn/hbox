@@ -3,16 +3,6 @@
     <attr name="fontPath" format="string" />
     <attr name="textFieldStyle" format="reference" />
 
-    <declare-styleable name="themeColor">
-        <attr name="color_theme" format="color|reference" />
-        <attr name="color_theme_80" format="color|reference" />
-        <attr name="color_theme_70" format="color|reference" />
-        <attr name="color_theme_60" format="color|reference" />
-        <attr name="color_theme_50" format="color|reference" />
-        <attr name="color_theme_40" format="color|reference" />
-        <attr name="color_theme_dark_70" format="color|reference" />
-    </declare-styleable>
-
     <declare-styleable name="lbBaseGridView">
         <attr name="focusOutFront" format="boolean" />
         <attr name="focusOutEnd" format="boolean" />

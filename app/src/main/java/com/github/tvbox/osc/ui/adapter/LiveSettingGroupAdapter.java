@@ -30,9 +30,7 @@ public class LiveSettingGroupAdapter extends BaseQuickAdapter<LiveSettingGroup, 
         tvGroupName.setText(group.getGroupName());
         int groupIndex = group.getGroupIndex();
         if (groupIndex == selectedGroupIndex && groupIndex != focusedGroupIndex) {
-            // takagen99: Added Theme Color
-//            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-            tvGroupName.setTextColor(((BaseActivity) mContext).getThemeColor());
+            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_theme));
         } else {
             tvGroupName.setTextColor(Color.WHITE);
         }

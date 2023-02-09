@@ -51,7 +51,15 @@
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/set_hm.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/set_play.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/set_setting.xml" value="0.1" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme.xml" value="0.1255" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_40.xml" value="0.1255" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_50.xml" value="0.1255" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_60.xml" value="0.1255" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_70.xml" value="0.1255" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_80.xml" value="0.1255" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_dark_70.xml" value="0.1255" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_live_focus.xml" value="0.1" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_source_flag_focus.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_thumb_note.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_thumb_year.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_user_delete.xml" value="0.209" />
@@ -87,6 +95,7 @@
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_home_sort.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_search_subtitle_result.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_user_hot_vod.xml" value="0.19202898550724637" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_view_load_more.xml" value="0.11458333333333333" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/player_vod_control_view.xml" value="0.19202898550724637" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable-xhdpi/box_controller_bottom_bg.xml" value="0.141" />
         <entry key="..\:/Users/takkie/AndroidStudioProjects/github/TVBox/app/src/main/res/drawable/button_dialog_main.xml" value="0.141" />

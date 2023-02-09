@@ -73,23 +73,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
             th.printStackTrace();
         }
 
-        // takagen99 : Set Theme Color
-        if (Hawk.get(HawkConfig.THEME_SELECT, 0) == 0) {
-            setTheme(R.style.NetfxTheme);
-        } else if (Hawk.get(HawkConfig.THEME_SELECT, 0) == 1) {
-            setTheme(R.style.DoraeTheme);
-        } else if (Hawk.get(HawkConfig.THEME_SELECT, 0) == 2) {
-            setTheme(R.style.PepsiTheme);
-        } else if (Hawk.get(HawkConfig.THEME_SELECT, 0) == 3) {
-            setTheme(R.style.NarutoTheme);
-        } else if (Hawk.get(HawkConfig.THEME_SELECT, 0) == 4) {
-            setTheme(R.style.MinionTheme);
-        } else if (Hawk.get(HawkConfig.THEME_SELECT, 0) == 5) {
-            setTheme(R.style.YagamiTheme);
-        } else {
-            setTheme(R.style.SakuraTheme);
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResID());
         mContext = this;
@@ -289,13 +272,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
 
     public void setScreenOff() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
-    // takagen99: Added Theme Color
-    public int getThemeColor() {
-        TypedArray a = mContext.obtainStyledAttributes(R.styleable.themeColor);
-        int themeColor = a.getColor(R.styleable.themeColor_color_theme, 0);
-        return themeColor;
     }
 
     protected static BitmapDrawable globalWp = null;

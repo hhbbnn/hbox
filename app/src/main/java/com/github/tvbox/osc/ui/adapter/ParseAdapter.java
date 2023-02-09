@@ -22,9 +22,7 @@ public class ParseAdapter extends BaseQuickAdapter<ParseBean, BaseViewHolder> {
         TextView tvParse = helper.getView(R.id.tvParse);
         tvParse.setVisibility(View.VISIBLE);
         if (item.isDefault()) {
-            // takagen99: Added Theme Color
-//            tvParse.setTextColor(mContext.getResources().getColor(R.color.color_theme));
-            tvParse.setTextColor(((BaseActivity) mContext).getThemeColor());
+            tvParse.setTextColor(mContext.getResources().getColor(R.color.color_theme));
         } else {
             tvParse.setTextColor(Color.WHITE);
         }

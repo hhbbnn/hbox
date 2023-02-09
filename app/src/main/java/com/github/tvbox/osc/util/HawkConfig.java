@@ -45,7 +45,6 @@ public class HawkConfig {
     public static final String STORAGE_DRIVE_SORT = "storage_drive_sort";
     public static final String SUBTITLE_TEXT_SIZE = "subtitle_text_size";
     public static final String SUBTITLE_TIME_DELAY = "subtitle_time_delay";
-    public static final String THEME_SELECT = "theme_select";
 
     // Live Settings
     public static final String LIVE_CHANNEL = "last_live_channel_name";
