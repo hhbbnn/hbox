@@ -297,29 +297,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
-        findViewById(R.id.llLiveAdd).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                ApiDialog dialog = new ApiDialog(mActivity);
-                EventBus.getDefault().register(dialog);
-                dialog.setOnListener(new ApiDialog.OnListener() {
-                    @Override
-                    public void onchange(String api) {
-                        SourceUtil.setCurrentApi(api);
-                        tvApi.setText(SourceUtil.getCurrentApi().getName());
-                    }
-                });
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        ((BaseActivity) mActivity).hideSystemUI(true);
-                        EventBus.getDefault().unregister(dialog);
-                    }
-                });
-                dialog.show();
-            }
-        });
+
         findViewById(R.id.llEpg).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -348,29 +326,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
-        findViewById(R.id.llEpgAdd).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                ApiDialog dialog = new ApiDialog(mActivity);
-                EventBus.getDefault().register(dialog);
-                dialog.setOnListener(new ApiDialog.OnListener() {
-                    @Override
-                    public void onchange(String api) {
-                        SourceUtil.setCurrentApi(api);
-                        tvApi.setText(SourceUtil.getCurrentApi().getName());
-                    }
-                });
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        ((BaseActivity) mActivity).hideSystemUI(true);
-                        EventBus.getDefault().unregister(dialog);
-                    }
-                });
-                dialog.show();
-            }
-        });
+
         // 1. HOME Configuration ---------------------------------------------------------------- //
         // Select Home Source ------------------------------------
         findViewById(R.id.llHomeApi).setOnClickListener(new View.OnClickListener() {

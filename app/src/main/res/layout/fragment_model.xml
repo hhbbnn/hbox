@@ -66,6 +66,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/vs_50"
                     android:layout_marginBottom="@dimen/vs_10"
+                    android:layout_marginStart="@dimen/vs_5"
+                    android:layout_marginLeft="@dimen/vs_5"
+                    android:layout_marginEnd="@dimen/vs_5"
+                    android:layout_marginRight="@dimen/vs_5"
                     android:background="@drawable/shape_setting_model_focus"
                     android:focusable="true"
                     android:gravity="center_vertical"
@@ -203,18 +207,10 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="@dimen/vs_0"
-                        android:layout_height="@dimen/vs_50"
-                        android:layout_weight="1"
-                        android:layout_marginBottom="@dimen/vs_10"
-                        android:focusable="false"
-                        android:orientation="horizontal">
-                        <LinearLayout
                             android:id="@+id/llLive"
-                            android:layout_width="wrap_content"
+                            android:layout_width="@dimen/vs_0"
                             android:layout_height="@dimen/vs_50"
                             android:layout_weight="1"
-                            android:layout_marginBottom="@dimen/vs_10"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
@@ -249,42 +245,11 @@
                                 android:textSize="@dimen/ts_24" />
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/llLiveAdd"
-                            android:layout_width="@dimen/vs_60"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/vs_5"
-                            android:layout_marginLeft="@dimen/vs_5"
-                            android:layout_marginEnd="@dimen/vs_5"
-                            android:layout_marginRight="@dimen/vs_5"
-                            android:background="@drawable/shape_setting_model_focus"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/vs_10">
-
-                            <ImageView
-                                android:layout_width="@dimen/vs_30"
-                                android:layout_height="@dimen/vs_30"
-                                android:focusable="true"
-                                android:src="@drawable/icon_circle_plus" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
                     <LinearLayout
-                        android:layout_width="@dimen/vs_0"
-                        android:layout_height="@dimen/vs_50"
-                        android:layout_weight="1"
-                        android:layout_marginBottom="@dimen/vs_10"
-                        android:focusable="false"
-                        android:orientation="horizontal">
-                        <LinearLayout
                             android:id="@+id/llEpg"
-                            android:layout_width="wrap_content"
+                            android:layout_width="@dimen/vs_0"
                             android:layout_height="@dimen/vs_50"
                             android:layout_weight="1"
-                            android:layout_marginBottom="@dimen/vs_10"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
@@ -318,29 +283,6 @@
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/ts_24" />
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/llEpgAdd"
-                            android:layout_width="@dimen/vs_60"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/vs_5"
-                            android:layout_marginLeft="@dimen/vs_5"
-                            android:layout_marginEnd="@dimen/vs_5"
-                            android:layout_marginRight="@dimen/vs_5"
-                            android:background="@drawable/shape_setting_model_focus"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/vs_10">
-
-                            <ImageView
-                                android:layout_width="@dimen/vs_30"
-                                android:layout_height="@dimen/vs_30"
-                                android:focusable="true"
-                                android:src="@drawable/icon_circle_plus" />
-                        </LinearLayout>
-
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -427,59 +369,63 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/llHomeApi"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_setting_model_focus"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="@dimen/vs_20"
-                        android:paddingRight="@dimen/vs_20">
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mn_home"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/ts_24" />
+                        <LinearLayout
+                            android:id="@+id/llHomeApi"
+                            android:layout_width="@dimen/vs_0"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/vs_5"
+                            android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
+                            android:layout_weight="1"
+                            android:background="@drawable/shape_setting_model_focus"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingLeft="@dimen/vs_20"
+                            android:paddingRight="@dimen/vs_20">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mn_home"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/ts_24" />
 
-                        <TextView
-                            android:id="@+id/tvHomeApi"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="middle"
-                            android:singleLine="true"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/ts_24" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/vs_10"
-                            android:layout_marginLeft="@dimen/vs_10"
-                            android:text=">"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/ts_24" />
+                            <TextView
+                                android:id="@+id/tvHomeApi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="middle"
+                                android:singleLine="true"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/ts_24" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/vs_10"
+                                android:layout_marginLeft="@dimen/vs_10"
+                                android:text=">"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/ts_24" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
@@ -487,6 +433,8 @@
                             android:id="@+id/showPreview"
                             android:layout_width="@dimen/vs_0"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/vs_5"
+                            android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
                             android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
@@ -532,6 +480,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
                             android:background="@drawable/shape_setting_model_focus"
                             android:focusable="true"
@@ -583,10 +533,9 @@
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:orientation="horizontal">
+
                         <LinearLayout
                             android:id="@+id/llHomeShow"
                             android:layout_width="@dimen/vs_0"
@@ -638,6 +587,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
                             android:background="@drawable/shape_setting_model_focus"
                             android:focusable="true"
@@ -653,7 +604,7 @@
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/ts_24" />
 
-                            <Space
+                            <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1" />
@@ -674,15 +625,12 @@
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/ts_30" />
                         </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
@@ -690,6 +638,8 @@
                             android:id="@+id/llScale"
                             android:layout_width="@dimen/vs_0"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/vs_5"
+                            android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
                             android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
@@ -735,6 +685,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
                             android:background="@drawable/shape_setting_model_focus"
                             android:focusable="true"
@@ -786,10 +738,6 @@
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
@@ -797,6 +745,8 @@
                             android:id="@+id/llHomeRec"
                             android:layout_width="@dimen/vs_0"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/vs_5"
+                            android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
                             android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
@@ -842,6 +792,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
                             android:background="@drawable/shape_setting_model_focus"
                             android:focusable="true"
@@ -884,10 +836,6 @@
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
@@ -895,6 +843,8 @@
                             android:id="@+id/llMediaCodec"
                             android:layout_width="@dimen/vs_0"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/vs_5"
+                            android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
                             android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
@@ -940,6 +890,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
                             android:background="@drawable/shape_setting_model_focus"
                             android:focusable="true"
@@ -1060,10 +1012,6 @@
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:focusable="false"
                         android:orientation="horizontal">
@@ -1072,6 +1020,8 @@
                             android:id="@+id/llLocale"
                             android:layout_width="@dimen/vs_0"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/vs_5"
+                            android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
                             android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
@@ -1117,6 +1067,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
                             android:background="@drawable/shape_setting_model_focus"
                             android:focusable="true"
@@ -1159,10 +1111,6 @@
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:focusable="false"
                         android:orientation="horizontal">
@@ -1171,6 +1119,8 @@
                             android:id="@+id/llWp"
                             android:layout_width="@dimen/vs_0"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/vs_5"
+                            android:layout_marginLeft="@dimen/vs_5"
                             android:layout_marginEnd="@dimen/vs_5"
                             android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
@@ -1209,6 +1159,8 @@
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/vs_5"
                             android:layout_marginLeft="@dimen/vs_5"
+                            android:layout_marginEnd="@dimen/vs_5"
+                            android:layout_marginRight="@dimen/vs_5"
                             android:layout_weight="1"
                             android:background="@drawable/shape_setting_model_focus"
                             android:focusable="true"
@@ -1251,6 +1203,13 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:layout_width="@dimen/vs_0"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:focusable="false"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
                         android:id="@+id/llRender"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
@@ -1294,14 +1253,12 @@
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
                     </LinearLayout>
+                        
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/vs_5"
-                        android:layout_marginLeft="@dimen/vs_5"
-                        android:layout_marginEnd="@dimen/vs_5"
-                        android:layout_marginRight="@dimen/vs_5"
                         android:layout_weight="1"
                         android:focusable="false"
                         android:orientation="horizontal">
