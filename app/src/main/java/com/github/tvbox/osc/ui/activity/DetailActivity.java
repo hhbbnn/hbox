@@ -199,10 +199,17 @@ public class DetailActivity extends BaseActivity {
                     }
                     vodInfo.reverse();
                     if (vodInfo.seriesMap.get(vodInfo.playFlag).size() > vodInfo.playIndex) {
+                        vodInfo.playIndex = (vodInfo.seriesMap.get(vodInfo.playFlag).size() - 1) - vodInfo.playIndex;
                         vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).selected = true;
+                        if(previewVodInfo!=null){
+                            previewVodInfo.playIndex = vodInfo.playIndex;
+                            previewVodInfo.seriesMap = vodInfo.seriesMap;
+                            previewVodInfo.reverseSort = vodInfo.reverseSort;
+                        }
                     }
                     insertVod(sourceKey, vodInfo);
                     seriesAdapter.notifyDataSetChanged();
+                    refreshList();
                 }
             }
         });
@@ -399,6 +406,7 @@ public class DetailActivity extends BaseActivity {
                 }
                 if (previewVodInfo != null) {
                     previewVodInfo.playerCfg = vodInfo.playerCfg;
+                    previewVodInfo.reverseSort = vodInfo.reverseSort;
                     previewVodInfo.playFlag = vodInfo.playFlag;
                     previewVodInfo.playIndex = vodInfo.playIndex;
                     previewVodInfo.seriesMap = vodInfo.seriesMap;

@@ -197,23 +197,15 @@ public class PlayActivity extends BaseActivity {
         mController.setListener(new VodController.VodControlListener() {
             @Override
             public void playNext(boolean rmProgress) {
-                if (mVodInfo.reverseSort) {
-                    PlayActivity.this.playPrevious();
-                } else {
-                    String preProgressKey = progressKey;
-                    PlayActivity.this.playNext(rmProgress);
-                    if (rmProgress && preProgressKey != null)
-                        CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
-                }
+                String preProgressKey = progressKey;
+                PlayActivity.this.playNext(rmProgress);
+                if (rmProgress && preProgressKey != null)
+                    CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
             }
 
             @Override
             public void playPre() {
-                if (mVodInfo.reverseSort) {
-                    PlayActivity.this.playNext(false);
-                } else {
-                    PlayActivity.this.playPrevious();
-                }
+                PlayActivity.this.playPrevious();
             }
 
             @Override
@@ -912,11 +904,7 @@ public class PlayActivity extends BaseActivity {
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasNext = false;
         } else {
-            if (mVodInfo.reverseSort) {
-                hasNext = mVodInfo.playIndex - 1 >= 0;
-            } else {
-                hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
-            }
+            hasNext = mVodInfo.playIndex - 1 >= 0;
         }
         if (!hasNext) {
             Toast.makeText(this, "已经是最后一集了", Toast.LENGTH_SHORT).show();
@@ -926,11 +914,7 @@ public class PlayActivity extends BaseActivity {
             }
             return;
         }
-        if (mVodInfo.reverseSort) {
-            mVodInfo.playIndex--;
-        } else {
-            mVodInfo.playIndex++;
-        }
+        mVodInfo.playIndex++;
         play(false);
     }
 
@@ -939,21 +923,13 @@ public class PlayActivity extends BaseActivity {
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasPre = false;
         } else {
-            if (mVodInfo.reverseSort) {
-                hasPre = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
-            } else {
-                hasPre = mVodInfo.playIndex - 1 >= 0;
-            }
+            hasPre = mVodInfo.playIndex - 1 >= 0;
         }
         if (!hasPre) {
             Toast.makeText(this, "已经是第一集了", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (mVodInfo.reverseSort) {
-            mVodInfo.playIndex++;
-        } else {
-            mVodInfo.playIndex--;
-        }
+        mVodInfo.playIndex--;
         play(false);
     }
 

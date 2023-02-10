@@ -192,23 +192,15 @@ public class PlayFragment extends BaseLazyFragment {
         mController.setListener(new VodController.VodControlListener() {
             @Override
             public void playNext(boolean rmProgress) {
-                if (mVodInfo.reverseSort) {
-                    PlayFragment.this.playPrevious();
-                } else {
-                    String preProgressKey = progressKey;
-                    PlayFragment.this.playNext(rmProgress);
-                    if (rmProgress && preProgressKey != null)
-                        CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
-                }
+                String preProgressKey = progressKey;
+                PlayFragment.this.playNext(rmProgress);
+                if (rmProgress && preProgressKey != null)
+                    CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
             }
 
             @Override
             public void playPre() {
-                if (mVodInfo.reverseSort) {
-                    PlayFragment.this.playNext(false);
-                } else {
-                    PlayFragment.this.playPrevious();
-                }
+                PlayFragment.this.playPrevious();
             }
 
             @Override
