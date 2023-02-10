@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.room.util.StringUtil;
 import androidx.viewpager.widget.ViewPager;
 
 import com.github.tvbox.osc.R;
@@ -64,12 +65,14 @@ import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.ToastHelper;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -454,18 +457,23 @@ public class HomeActivity extends BaseActivity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-//                            dataInitOk = true;
-//                            jarInitOk = true;
-
-                            SourceUtil.resetSource(new SourceUtil.Callback<String>() {
-                                @Override
-                                public void success(String data) {
-                                    initData();
-                                }
-                                @Override
-                                public void error(String msg) {
-                                }
-                            });
+                            String appSource = HomeActivity.getRes().getString(R.string.app_source);
+                            if(StringUtils.isNotEmpty(appSource)){
+                                SourceUtil.replaceAllSource(appSource,new SourceUtil.Callback<String>() {
+                                    @Override
+                                    public void success(String data) {
+                                        initData();
+                                    }
+                                    @Override
+                                    public void error(String msg) {
+                                        ToastHelper.showToast(HomeActivity.this,msg);
+                                    }
+                                });
+                            }else{
+                                dataInitOk = true;
+                                jarInitOk = true;
+                                initData();
+                            }
                         }
                     });
                     return;
