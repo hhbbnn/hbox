@@ -13,11 +13,13 @@ import androidx.annotation.NonNull;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.server.ControlManager;
+import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.github.tvbox.osc.ui.tv.QRCodeGen;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -51,6 +53,10 @@ public class SourceUploadDialog extends BaseDialog {
         ivQRCode = findViewById(R.id.sourceIvQRCode);
         tvAddress = findViewById(R.id.sourceTvAddress);
         inputSourceUrl = findViewById(R.id.inputSourceUrl);
+        String appSource = HomeActivity.getRes().getString(R.string.app_source);
+        if(StringUtils.isNotEmpty(appSource)) {
+            findViewById(R.id.sourceResetSubmit).setVisibility(View.VISIBLE);
+        }
 
         findViewById(R.id.sourceAddSubmit).setOnClickListener(new View.OnClickListener() {
             @Override

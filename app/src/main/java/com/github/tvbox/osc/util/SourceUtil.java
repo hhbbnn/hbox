@@ -160,6 +160,8 @@ public class SourceUtil {
                     public void onError(Response<String> response) {
                         super.onError(response);
                         callback.error("");
+
+                        ToastHelper.showToast(AppManager.getInstance().currentActivity(), response.getException().getMessage());
                     }
 
                     public String convertResponse(okhttp3.Response response) throws Throwable {
@@ -243,7 +245,7 @@ public class SourceUtil {
             }
             @Override
             public void error(String msg) {
-                callback.error("导入失败");
+                callback.error("导入失败"+msg);
             }
         });
     }
@@ -253,40 +255,6 @@ public class SourceUtil {
         history = Arrays.asList(apiArray);
         putHistory(history);
         setCurrentApi(history.get(0));
-    }
-
-    public static void resetSource(Callback<String> callback) {
-        try {
-            AssetManager assetManager = App.getInstance().getAssets(); //获得assets资源管理器（assets中的文件无法直接访问，可以使用AssetManager访问）
-            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open("default_api.json"),"UTF-8"); //使用IO流读取json文件内容
-            BufferedReader br = new BufferedReader(inputStreamReader);//使用字符高效流
-            String line;
-            StringBuilder builder = new StringBuilder();
-            while ((line = br.readLine())!=null){
-                builder.append(line);
-            }
-            br.close();
-            inputStreamReader.close();
-            if(!builder.toString().isEmpty()){
-                loadStoreHouse(builder.toString(), new Callback<Map<String,String>>() {
-                    @Override
-                    public void success(Map<String,String> data) {
-                        clearCurrentApi();
-                        clearHistory();
-                        addSource(data.get("data"));
-                        callback.success(data.get("msg"));
-                    }
-
-                    @Override
-                    public void error(String msg) {
-                        callback.error(msg);
-                    }
-                });
-            }
-
-        } catch (IOException e) {
-            callback.error("重置失败！");
-        }
     }
 
     public static void loadStoreHouse(String data,Callback<Map<String,String>> callback){

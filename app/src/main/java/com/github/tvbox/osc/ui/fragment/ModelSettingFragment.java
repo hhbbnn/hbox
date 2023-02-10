@@ -43,6 +43,7 @@ import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 
@@ -243,16 +244,22 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     @Override
                     public void onReset() {
                         Toast.makeText(mActivity,"重置中...",Toast.LENGTH_LONG).show();
-                        SourceUtil.resetSource(new SourceUtil.Callback<String>(){
-                            @Override
-                            public void success(String msg) {
-                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
-                            }
-                            @Override
-                            public void error(String msg) {
-                                Toast.makeText(mActivity,msg,Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        String appSource = HomeActivity.getRes().getString(R.string.app_source);
+                        if(StringUtils.isNotEmpty(appSource)) {
+                            SourceUtil.replaceAllSource(appSource, new SourceUtil.Callback<String>() {
+                                @Override
+                                public void success(String msg) {
+                                    Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void error(String msg) {
+                                    Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }else{
+                            Toast.makeText(mActivity,"无效操作",Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

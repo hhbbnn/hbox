@@ -3,6 +3,7 @@
     <string name="app_name">宝盒</string>
     <string name="app_home">首页</string>
     <string name="app_source"></string>
+    // https://gitlab.com/cyf783/bh/-/raw/main/a.json //
 
     // Home Page //
     <string name="hm_ok">加载成功</string>
