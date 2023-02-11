@@ -1,7 +1,6 @@
 package com.github.tvbox.osc.util;
 
 import com.github.tvbox.osc.base.App;
-import com.github.tvbox.osc.util.SSL.SSLSocketFactoryCompat;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
@@ -10,20 +9,25 @@ import com.orhanobut.hawk.Hawk;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import org.conscrypt.Conscrypt;
+
 import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.security.Provider;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
+import okhttp3.ConnectionSpec;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.dnsoverhttps.DnsOverHttps;
@@ -32,6 +36,10 @@ import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkGoHelper {
     public static final long DEFAULT_MILLISECONDS = 10000;      //默认的超时时间
+    public static final Provider conscrypt = Conscrypt.newProvider();
+    static {
+        Security.insertProviderAt(conscrypt, 1);
+    }
 
     static void initExoOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -134,7 +142,8 @@ public class OkGoHelper {
     public static void init() {
         initDnsOverHttps();
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        List connectionSpecs = Arrays.asList(ConnectionSpec.RESTRICTED_TLS, ConnectionSpec.CLEARTEXT);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().connectionSpecs(connectionSpecs);
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("OkGo");
 
         if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
@@ -197,66 +206,14 @@ public class OkGoHelper {
                             return new java.security.cert.X509Certificate[]{};
                         }
                     };
-            final Tls12SocketFactory sslSocketFactory = new Tls12SocketFactory(new SSLSocketFactoryCompat(trustAllCert));
+            final SSLContext sslContext = SSLContext.getInstance("TLS", conscrypt);
+            sslContext.init(null, new TrustManager[] { trustAllCert }, null);
+            final SSLSocketFactory sslSocketFactory = new TLSSocketFactory(sslContext.getSocketFactory());
             return builder
                     .sslSocketFactory(sslSocketFactory, trustAllCert)
                     .hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private static class Tls12SocketFactory extends SSLSocketFactory {
-
-        private static final String[] TLS_SUPPORT_VERSION = {"TLSv1.1", "TLSv1.2"};
-
-        final SSLSocketFactory delegate;
-
-        private Tls12SocketFactory(SSLSocketFactory base) {
-            this.delegate = base;
-        }
-
-        @Override
-        public String[] getDefaultCipherSuites() {
-            return delegate.getDefaultCipherSuites();
-        }
-
-        @Override
-        public String[] getSupportedCipherSuites() {
-            return delegate.getSupportedCipherSuites();
-        }
-
-        @Override
-        public Socket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
-            return patch(delegate.createSocket(s, host, port, autoClose));
-        }
-
-        @Override
-        public Socket createSocket(String host, int port) throws IOException {
-            return patch(delegate.createSocket(host, port));
-        }
-
-        @Override
-        public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
-            return patch(delegate.createSocket(host, port, localHost, localPort));
-        }
-
-        @Override
-        public Socket createSocket(InetAddress host, int port) throws IOException {
-            return patch(delegate.createSocket(host, port));
-        }
-
-        @Override
-        public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
-            return patch(delegate.createSocket(address, port, localAddress, localPort));
-        }
-
-        private Socket patch(Socket s) {
-            //代理SSLSocketFactory在创建一个Socket连接的时候，会设置Socket的可用的TLS版本。
-            if (s instanceof SSLSocket) {
-                ((SSLSocket) s).setEnabledProtocols(TLS_SUPPORT_VERSION);
-            }
-            return s;
         }
     }
 }

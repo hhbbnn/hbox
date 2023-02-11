@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable-v21/button_detail_all.xml" value="0.1395" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable-v21/button_home_select.xml" value="0.1" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/bg_live.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/box_controller_bottom_bg.xml" value="0.209" />
@@ -59,6 +60,7 @@
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_80.xml" value="0.1255" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_color_theme_dark_70.xml" value="0.1255" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_live_focus.xml" value="0.1" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_setting_model_focus.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_source_flag_focus.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_thumb_note.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/shape_thumb_year.xml" value="0.209" />
@@ -77,6 +79,7 @@
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/v_type.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/vod_ffwd.xml" value="0.209" />
         <entry key="..\:/03-open/HBox/app/src/main/res/drawable/vod_play.xml" value="0.209" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout-v21/activity_play.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout-v21/dialog_search_subtitle.xml" value="0.1" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout-v21/loadsir_loading_layout.xml" value="0.11458333333333333" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/activity_collect.xml" value="0.19202898550724637" />
@@ -88,6 +91,7 @@
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/dialog_search_subtitle.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/dialog_source_upload.xml" value="0.1" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/dialog_subtitle.xml" value="0.10444027517198248" />
+        <entry key="..\:/03-open/HBox/app/src/main/res/layout/fragment_grid.xml" value="0.12916666666666668" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/fragment_model.xml" value="0.1" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/fragment_user.xml" value="0.19202898550724637" />
         <entry key="..\:/03-open/HBox/app/src/main/res/layout/item_dialog_api_history.xml" value="0.19202898550724637" />
