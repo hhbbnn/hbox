@@ -97,6 +97,7 @@ dependencies {
     implementation('com.github.thegrizzlylabs:sardine-android:0.5') {
         exclude group: 'com.squareup.okhttp3'
     }
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation 'com.github.NanoHttpd.nanohttpd:nanohttpd:nanohttpd-project-2.3.1'
     implementation 'com.github.NanoHttpd.nanohttpd:nanohttpd:nanohttpd-websocket-2.3.1'
     implementation 'com.google.zxing:core:3.4.1'

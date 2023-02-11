@@ -1,11 +1,6 @@
 package com.github.tvbox.osc.util;
 
-import android.content.res.AssetManager;
-import android.widget.Toast;
-
-import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.ApiModel;
-import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,9 +13,6 @@ import com.orhanobut.hawk.Hawk;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
