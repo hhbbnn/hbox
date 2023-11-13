@@ -41,7 +41,6 @@ import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.RoomDataManger;
 import com.github.tvbox.osc.event.RefreshEvent;
-import com.github.tvbox.osc.picasso.RoundTransformation;
 import com.github.tvbox.osc.player.controller.VodController;
 import com.github.tvbox.osc.ui.adapter.SeriesAdapter;
 import com.github.tvbox.osc.ui.adapter.SeriesFlagAdapter;
@@ -51,7 +50,7 @@ import com.github.tvbox.osc.ui.fragment.PlayFragment;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
-import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.ImgUtil;
 import com.github.tvbox.osc.util.SearchHelper;
 import com.github.tvbox.osc.util.SubtitleHelper;
 import com.github.tvbox.osc.util.thunder.Thunder;
@@ -66,7 +65,6 @@ import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -83,8 +81,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * @author pj567
@@ -122,6 +118,7 @@ public class DetailActivity extends BaseActivity {
     private SeriesAdapter seriesAdapter;
     public String vodId;
     public String sourceKey;
+    public String firstsourceKey;
     boolean seriesSelect = false;
     private View seriesFlagFocus = null;
     private HashMap<String, String> mCheckSources = null;
@@ -206,7 +203,7 @@ public class DetailActivity extends BaseActivity {
                     if (vodInfo.seriesMap.get(vodInfo.playFlag).size() > vodInfo.playIndex) {
                         vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).selected = true;
                     }
-                    insertVod(sourceKey, vodInfo);
+                    insertVod(firstsourceKey, vodInfo);
                     seriesAdapter.notifyDataSetChanged();
                 }
             }
@@ -403,7 +400,7 @@ public class DetailActivity extends BaseActivity {
             preFlag = vodInfo.playFlag;
             Bundle bundle = new Bundle();
             //保存历史
-            insertVod(sourceKey, vodInfo);
+            insertVod(firstsourceKey, vodInfo);
             bundle.putString("sourceKey", sourceKey);
             bundle.putSerializable("VodInfo", vodInfo);
             if (showPreview) {
@@ -442,7 +439,7 @@ public class DetailActivity extends BaseActivity {
         if (vodInfo.seriesMap.get(vodInfo.playFlag) != null) {
             boolean canSelect = true;
             for (int j = 0; j < vodInfo.seriesMap.get(vodInfo.playFlag).size(); j++) {
-                if (vodInfo.seriesMap.get(vodInfo.playFlag).get(j).selected == true) {
+                if (vodInfo.seriesMap.get(vodInfo.playFlag).get(j).selected) {
                     canSelect = false;
                     break;
                 }
@@ -501,29 +498,29 @@ public class DetailActivity extends BaseActivity {
                 if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
                     showSuccess();
                     mVideo = absXml.movie.videoList.get(0);
+                    mVideo.id = vodId;
+                    if (TextUtils.isEmpty(mVideo.name)) mVideo.name = "片名";
                     vodInfo = new VodInfo();
                     vodInfo.setVideo(mVideo);
                     vodInfo.sourceKey = mVideo.sourceKey;
+                    sourceKey = mVideo.sourceKey;
 
                     tvName.setText(mVideo.name);
-                    setTextShow(tvSite, getString(R.string.det_source), ApiConfig.get().getSource(mVideo.sourceKey).getName());
+                    setTextShow(tvSite, getString(R.string.det_source), ApiConfig.get().getSource(firstsourceKey).getName());
                     setTextShow(tvYear, getString(R.string.det_year), mVideo.year == 0 ? "" : String.valueOf(mVideo.year));
                     setTextShow(tvArea, getString(R.string.det_area), mVideo.area);
                     setTextShow(tvLang, getString(R.string.det_lang), mVideo.lang);
-                    setTextShow(tvType, getString(R.string.det_type), mVideo.type);
+                    if (!firstsourceKey.equals(sourceKey)) {
+                        setTextShow(tvType, getString(R.string.det_type), "[" + ApiConfig.get().getSource(sourceKey).getName() + "] 解析");
+                    } else {
+                        setTextShow(tvType, getString(R.string.det_type), mVideo.type);
+                    }
                     setTextShow(tvActor, getString(R.string.det_actor), mVideo.actor);
                     setTextShow(tvDirector, getString(R.string.det_dir), mVideo.director);
                     setTextShow(tvDes, getString(R.string.det_des), removeHtmlTag(mVideo.des));
                     if (!TextUtils.isEmpty(mVideo.pic)) {
-                        Picasso.get()
-                                .load(DefaultConfig.checkReplaceProxy(mVideo.pic))
-                                .transform(new RoundTransformation(MD5.string2MD5(mVideo.pic + mVideo.name))
-                                        .centerCorp(true)
-                                        .override(AutoSizeUtils.mm2px(mContext, 300), AutoSizeUtils.mm2px(mContext, 400))
-                                        .roundRadius(AutoSizeUtils.mm2px(mContext, 15), RoundTransformation.RoundType.ALL))
-                                .placeholder(R.drawable.img_loading_placeholder)
-                                .error(R.drawable.img_loading_placeholder)
-                                .into(ivThumb);
+                        // takagen99 : Use Glide instead : Rounding Radius is in pixel
+                        ImgUtil.load(mVideo.pic, ivThumb, 14);
                     } else {
                         ivThumb.setImageResource(R.drawable.img_loading_placeholder);
                     }
@@ -614,6 +611,7 @@ public class DetailActivity extends BaseActivity {
         if (vid != null) {
             vodId = vid;
             sourceKey = key;
+            firstsourceKey = key;
             showLoading();
             sourceViewModel.getDetail(sourceKey, vodId);
 
@@ -640,12 +638,12 @@ public class DetailActivity extends BaseActivity {
                         mGridView.setSelection(index);
                         vodInfo.playIndex = index;
                         //保存历史
-                        insertVod(sourceKey, vodInfo);
+                        insertVod(firstsourceKey, vodInfo);
                     }
                 } else if (event.obj instanceof JSONObject) {
                     vodInfo.playerCfg = event.obj.toString();
                     //保存历史
-                    insertVod(sourceKey, vodInfo);
+                    insertVod(firstsourceKey, vodInfo);
                 }
 
             }
@@ -689,7 +687,7 @@ public class DetailActivity extends BaseActivity {
                                     throw new IllegalStateException("网络请求错误");
                                 }
                             }
-		        
+
                             @Override
                             public void onSuccess(Response<String> response) {
                                 String r = response.body();
