@@ -6,8 +6,11 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.PictureInPictureParams;
 import android.app.RemoteAction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
@@ -18,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Rational;
 import android.view.KeyEvent;
 import android.view.View;
@@ -56,7 +58,7 @@ import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
-import com.github.tvbox.osc.bean.Subtitle;
+import com.github.tvbox.osc.bean.SubtitleBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.event.RefreshEvent;
@@ -71,17 +73,19 @@ import com.github.tvbox.osc.player.thirdparty.MXPlayer;
 import com.github.tvbox.osc.player.thirdparty.ReexPlayer;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.server.RemoteServer;
+import com.github.tvbox.osc.subtitle.model.Subtitle;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.SubtitleDialog;
 import com.github.tvbox.osc.util.AdBlocker;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
-import com.github.tvbox.osc.util.OkGoHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
+import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.util.VideoParseRuler;
 import com.github.tvbox.osc.util.XWalkUtils;
 import com.github.tvbox.osc.util.thunder.Jianpian;
@@ -96,7 +100,7 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 import com.orhanobut.hawk.Hawk;
-import org.apache.commons.lang3.StringUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -125,8 +129,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.jessyan.autosize.AutoSize;
-import okhttp3.Cache;
-
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 import xyz.doikki.videoplayer.player.AbstractPlayer;
@@ -142,8 +144,14 @@ public class PlayActivity extends BaseActivity {
     private Handler mHandler;  
 
     private String videoURL;
-
+    private long videoDuration = -1;
     private List<String> videoSegmentationURL = new ArrayList<>();
+    
+    private BroadcastReceiver pipActionReceiver;
+    public static final String BROADCAST_ACTION = "VOD_CONTROL";
+    public static final int BROADCAST_ACTION_PREV = 0;
+    public static final int BROADCAST_ACTION_PLAYPAUSE = 1;
+    public static final int BROADCAST_ACTION_NEXT = 2;
 
     @Override
     protected int getLayoutResID() {
@@ -183,6 +191,7 @@ public class PlayActivity extends BaseActivity {
         ProgressManager progressManager = new ProgressManager() {
             @Override
             public void saveProgress(String url, long progress) {
+                if (videoDuration == 0) return;
                 CacheManager.save(MD5.string2MD5(url), progress);
             }
 
@@ -307,48 +316,36 @@ public class PlayActivity extends BaseActivity {
     }
 
     void selectMySubtitle() throws Exception {
-        SubtitleDialog subtitleDialog = new SubtitleDialog(mContext);
-//        int playerType = mVodPlayerCfg.getInt("pl");
-//        subtitleDialog.selectInternal.setVisibility(View.VISIBLE);
-//        if (mController.mSubtitleView.hasInternal && playerType == 1) {
-//            subtitleDialog.selectInternal.setVisibility(View.VISIBLE);
-//        } else {
-//            subtitleDialog.selectInternal.setVisibility(View.GONE);
-//        }
+        SubtitleDialog subtitleDialog = new SubtitleDialog(PlayActivity.this);
+
         subtitleDialog.setSubtitleViewListener(new SubtitleDialog.SubtitleViewListener() {
-            @Override
+        	@Override
             public void setTextSize(int size) {
                 mController.mSubtitleView.setTextSize(size);
-            }
-
-            @Override
+            }@Override
             public void setSubtitleDelay(int milliseconds) {
                 mController.mSubtitleView.setSubtitleDelay(milliseconds);
-            }
-
-            @Override
+            }@Override
             public void selectInternalSubtitle() {
                 selectMyInternalSubtitle();
-            }
-
-            @Override
+            }@Override
             public void setTextStyle(int style) {
                 setSubtitleViewTextStyle(style);
             }
         });
         subtitleDialog.setSearchSubtitleListener(new SubtitleDialog.SearchSubtitleListener() {
-            @Override
+        	@Override
             public void openSearchSubtitleDialog() {
-                SearchSubtitleDialog searchSubtitleDialog = new SearchSubtitleDialog(mContext);
+                SearchSubtitleDialog searchSubtitleDialog = new SearchSubtitleDialog(PlayActivity.this);
                 searchSubtitleDialog.setSubtitleLoader(new SearchSubtitleDialog.SubtitleLoader() {
-                    @Override
-                    public void loadSubtitle(Subtitle subtitle) {
+                	@Override
+                    public void loadSubtitle(SubtitleBean subtitle) {
                         runOnUiThread(new Runnable() {
-                            @Override
+                        	@Override
                             public void run() {
                                 String zimuUrl = subtitle.getUrl();
-                                LOG.i("Remote Subtitle Url: " + zimuUrl);
-                                setSubtitle(zimuUrl);//设置字幕
+                                LOG.i("Remote SubtitleBean Url: " + zimuUrl);
+                                setSubtitle(zimuUrl); //设置字幕
                                 if (searchSubtitleDialog != null) {
                                     searchSubtitleDialog.dismiss();
                                 }
@@ -356,6 +353,13 @@ public class PlayActivity extends BaseActivity {
                         });
                     }
                 });
+              /*  EventBus.getDefault().register(searchSubtitleDialog);
+                searchSubtitleDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                	@Override
+                    public void onDismiss(DialogInterface dialog) {
+                        EventBus.getDefault().unregister(dialog);
+                    }
+                });*/
                 if (mVodInfo.playFlag.contains("Ali") || mVodInfo.playFlag.contains("parse")) {
                     searchSubtitleDialog.setSearchWord(mVodInfo.playNote);
                 } else {
@@ -373,7 +377,7 @@ public class PlayActivity extends BaseActivity {
                         .withChosenListener(new ChooserDialog.Result() {
                             @Override
                             public void onChoosePath(String path, File pathFile) {
-                                LOG.i("Local Subtitle Path: " + path);
+                                LOG.i("Local SubtitleBean Path: " + path);
                                 setSubtitle(path);//设置字幕
                             }
                         })
@@ -463,7 +467,7 @@ public class PlayActivity extends BaseActivity {
 
             @Override
             public String getDisplay(TrackInfoBean val) {
-                return val.name + (val.language.isEmpty() ? "" : " " + val.language);
+                return val.name + (StringUtils.isEmpty(val.language) ? "" : " " + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
             @Override
@@ -533,7 +537,7 @@ public class PlayActivity extends BaseActivity {
                 String name = val.name.replace("AUDIO,", "");
                 name = name.replace("N/A,", "");
                 name = name.replace(" ", "");
-                return name + (val.language.isEmpty() ? "" : " " + val.language);
+                return name + (StringUtils.isEmpty(val.language) ? "" : " " + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
             @Override
@@ -558,13 +562,15 @@ public class PlayActivity extends BaseActivity {
     }
 
     void setTip(String msg, boolean loading, boolean err) {
-        try {
-            mPlayLoadTip.setText(msg);
-            mPlayLoadTip.setVisibility(View.VISIBLE);
-            mPlayLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
-            mPlayLoadErr.setVisibility(err ? View.VISIBLE : View.GONE);
-        } catch (Exception ignore) {
-        }
+        runOnUiThread(new Runnable() { //影魔 解决解析偶发闪退
+            @Override
+            public void run() {
+                mPlayLoadTip.setText(msg);
+                mPlayLoadTip.setVisibility(View.VISIBLE);
+                mPlayLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
+                mPlayLoadErr.setVisibility(err ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     void hideTip() {
@@ -648,17 +654,25 @@ public class PlayActivity extends BaseActivity {
         boolean dealedExtXKey = false;
         for (int i = 0; i < lines.length; ++i) {
             if (!dealedExtXKey && lines[i].startsWith("#EXT-X-KEY")) {
-                String keyUrl = StringUtils.substringBetween(lines[i], "URI=\"", "\"");
-                if (keyUrl != null && !keyUrl.startsWith("http://") && !keyUrl.startsWith("https://")) {
-                    String newKeyUrl;
-                    if (keyUrl.charAt(0) == '/') {
-                        int ifirst = tsUrlPre.indexOf('/', 9);//skip https://, http://
-                        newKeyUrl = tsUrlPre.substring(0, ifirst) + keyUrl;
-                    } else
-                        newKeyUrl = tsUrlPre + keyUrl;
-                    lines[i] = lines[i].replace("URI=\"" + keyUrl + "\"", "URI=\"" + newKeyUrl + "\"");
-                }
-                dealedExtXKey = true;
+                String keyUrl = "";
+                int start = lines[i].indexOf("URI=\"");
+                if (start != -1) {
+                	start += "URI=\"".length();
+                    int end =  lines[i].indexOf("\"", start);
+                    if (end != -1) {
+                    	keyUrl = lines[i].substring(start, end);
+                    }
+                    if (!keyUrl.startsWith("http://") && !keyUrl.startsWith("https://")) {
+	                    String newKeyUrl;
+	                    if (keyUrl.charAt(0) == '/') {
+	                        int ifirst = tsUrlPre.indexOf('/', 9);//skip https://, http://
+	                        newKeyUrl = tsUrlPre.substring(0, ifirst) + keyUrl;
+	                    } else
+	                        newKeyUrl = tsUrlPre + keyUrl;
+	                    lines[i] = lines[i].replace("URI=\"" + keyUrl + "\"", "URI=\"" + newKeyUrl + "\"");
+	                }
+	                dealedExtXKey = true;
+				}
             }
             if (lines[i].length() == 0 || lines[i].charAt(0) == '#') {
                 continue;
@@ -795,8 +809,6 @@ public class PlayActivity extends BaseActivity {
                     }
                 });
     }
-    
-    private boolean extPlay = false;
 
     void startPlayUrl(String url, HashMap<String, String> headers) {
         final String finalUrl = url;
@@ -843,10 +855,8 @@ public class PlayActivity extends BaseActivity {
                         hideTip();
                         if (url.startsWith("data:application/dash+xml;base64,")) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
-                            App.getInstance()
-                                .setDashData(url.split("base64,")[1]);
-                            url = ControlManager.get()
-                                .getAddress(true) + "dash/proxy.mpd";
+                            App.getInstance().setDashData(url.split("base64,")[1]);
+                            url = ControlManager.get().getAddress(true) + "dash/proxy.mpd";
                         } else if (url.contains(".mpd") || url.contains("type=mpd")) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
                         } else {
@@ -867,8 +877,8 @@ public class PlayActivity extends BaseActivity {
     }
 
     private void initSubtitleView() {
-        TrackInfo trackInfo;
-
+    	AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+        TrackInfo trackInfo = null;
         if (mVideoView.getMediaPlayer() instanceof IjkmPlayer) {
             trackInfo = ((IjkmPlayer) (mVideoView.getMediaPlayer())).getTrackInfo();
             if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
@@ -878,7 +888,7 @@ public class PlayActivity extends BaseActivity {
                 @Override
                 public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
                     if (mController.mSubtitleView.isInternal) {
-                        com.github.tvbox.osc.subtitle.model.Subtitle subtitle = new com.github.tvbox.osc.subtitle.model.Subtitle();
+                        Subtitle subtitle = new Subtitle();
                         subtitle.content = text.getText();
                         mController.mSubtitleView.onSubtitleChanged(subtitle);
                     }
@@ -897,7 +907,7 @@ public class PlayActivity extends BaseActivity {
                     if (cues.size() > 0) {
                         CharSequence ss = cues.get(0).text;
                         if (ss != null && mController.mSubtitleView.isInternal) {
-                            com.github.tvbox.osc.subtitle.model.Subtitle subtitle = new com.github.tvbox.osc.subtitle.model.Subtitle();
+                            Subtitle subtitle = new Subtitle();
                             subtitle.content = ss.toString();
                             mController.mSubtitleView.onSubtitleChanged(subtitle);
                         }
@@ -917,6 +927,24 @@ public class PlayActivity extends BaseActivity {
             } else {
                 if (mController.mSubtitleView.hasInternal) {
                     mController.mSubtitleView.isInternal = true;
+                    if (mediaPlayer instanceof IjkmPlayer) {
+                        if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
+                            List < TrackInfoBean > subtitleTrackList = trackInfo.getSubtitle();
+                            int selectedIndex = trackInfo.getSubtitleSelected(true);
+                            boolean hasCh = false;
+                            for (TrackInfoBean subtitleTrackInfoBean: subtitleTrackList) {
+                                String lowerLang = subtitleTrackInfoBean.language.toLowerCase();
+                                if (lowerLang.startsWith("zh") || lowerLang.startsWith("ch")) {
+                                    hasCh = true;
+                                    if (selectedIndex != subtitleTrackInfoBean.trackId) {
+                                        ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackInfoBean.trackId);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!hasCh)((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackList.get(0).trackId);
+                        }
+                    }
                 }
             }
         }
@@ -936,8 +964,40 @@ public class PlayActivity extends BaseActivity {
                     boolean parse = info.optString("parse", "1").equals("1");
                     boolean jx = info.optString("jx", "0").equals("1");
                     playSubtitle = info.optString("subt", /*"https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/ElephantsDream_en.vtt"*/"");
+                    if (playSubtitle.isEmpty() && info.has("subs")) {
+                        try {
+                            JSONObject obj = info.getJSONArray("subs").optJSONObject(0);
+                            String url = obj.optString("url", "");
+                            if (!TextUtils.isEmpty(url) && !FileUtils.hasExtension(url)) {
+                                String format = obj.optString("format", "");
+                                String name = obj.optString("name", "字幕");
+                                String ext = ".srt";
+                                switch (format) {
+                                    case "text/x-ssa":
+                                        ext = ".ass";
+                                        break;
+                                    case "text/vtt":
+                                        ext = ".vtt";
+                                        break;
+                                    case "application/x-subrip":
+                                        ext = ".srt";
+                                        break;
+                                    case "text/lrc":
+                                        ext = ".lrc";
+                                        break;
+                                }
+                                String filename = name + (name.toLowerCase().endsWith(ext) ? "" : ext);
+                                url += "#" + URLEncoder.encode(filename);
+                            }
+                            playSubtitle = url;
+                        } catch (Throwable th) {}
+                    }
                     subtitleCacheKey = info.optString("subtKey", null);
                     String playUrl = info.optString("playUrl", "");
+                    String msg = info.optString("msg", "");
+                    if (!msg.isEmpty()) {
+                        Toast.makeText(PlayActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
                     String flag = info.optString("flag");
                     String url = info.getString("url");
                     HashMap<String, String> headers = null;
@@ -1052,6 +1112,42 @@ public class PlayActivity extends BaseActivity {
         }
         mController.setPlayerConfig(mVodPlayerCfg);
     }
+    
+    // takagen99 : Add check for external players not enter PIP    
+    private boolean extPlay = false;
+    
+    @Override
+    public void onUserLeaveHint() {
+        if (supportsPiPMode() && !extPlay && Hawk.get(HawkConfig.BACKGROUND_PLAY_TYPE, 0) == 2) {
+            // Calculate Video Resolution
+            int vWidth = mVideoView.getVideoSize()[0];
+            int vHeight = mVideoView.getVideoSize()[1];
+            Rational ratio = null;
+            if (vWidth != 0) {
+                if ((((double) vWidth) / ((double) vHeight)) > 2.39) {
+                    vHeight = (int) (((double) vWidth) / 2.35);
+                }
+                ratio = new Rational(vWidth, vHeight);
+            } else {
+                ratio = new Rational(16, 9);
+            }
+            List<RemoteAction> actions = new ArrayList<>();
+            actions.add(generateRemoteAction(android.R.drawable.ic_media_previous, BROADCAST_ACTION_PREV, "Prev", "Play Previous"));
+            actions.add(generateRemoteAction(android.R.drawable.ic_media_play, BROADCAST_ACTION_PLAYPAUSE, "Play/Pause", "Play or Pause"));
+            actions.add(generateRemoteAction(android.R.drawable.ic_media_next, BROADCAST_ACTION_NEXT, "Next", "Play Next"));
+            PictureInPictureParams params = new PictureInPictureParams.Builder()
+                    .setAspectRatio(ratio)
+                    .setActions(actions).build();
+            enterPictureInPictureMode(params);
+            mController.hideBottom();
+            mVideoView.postDelayed(() -> {
+                if (!mVideoView.isPlaying()){
+                    mController.togglePlay();
+                }
+            },400);
+        }
+        super.onUserLeaveHint();
+    }
 
     @Override
     public void onBackPressed() {
@@ -1093,6 +1189,57 @@ public class PlayActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (mVideoView != null) {
+            mVideoView.pause();
+        }
+    }
+    
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private RemoteAction generateRemoteAction(int iconResId, int actionCode, String title, String desc) {
+
+        final PendingIntent intent =
+                PendingIntent.getBroadcast(
+                        PlayActivity.this,
+                        actionCode,
+                        new Intent(BROADCAST_ACTION).putExtra("action", actionCode),
+                        0);
+        final Icon icon = Icon.createWithResource(PlayActivity.this, iconResId);
+        return (new RemoteAction(icon, title, desc, intent));
+    }
+
+    // takagen99 : PIP fix to close video when close window
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode);
+        if (supportsPiPMode() && isInPictureInPictureMode) {
+            pipActionReceiver = new BroadcastReceiver() {
+
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (intent == null || !intent.getAction().equals(BROADCAST_ACTION) || mController == null) {
+                        return;
+                    }
+
+                    int currentStatus = intent.getIntExtra("action", 1);
+                    if (currentStatus == BROADCAST_ACTION_PREV) {
+                        playPrevious();
+                    } else if (currentStatus == BROADCAST_ACTION_PLAYPAUSE) {
+                        mController.togglePlay();
+                    } else if (currentStatus == BROADCAST_ACTION_NEXT) {
+                        playNext(false);
+                    }
+                }
+            };
+            registerReceiver(pipActionReceiver, new IntentFilter(BROADCAST_ACTION));
+
+        } else {
+            // Closed playback
+            if (onStopCalled) {
+                mVideoView.release();
+            }
+            unregisterReceiver(pipActionReceiver);
+            pipActionReceiver = null;
+        }
     }
 
     @Override
@@ -1204,6 +1351,7 @@ public class PlayActivity extends BaseActivity {
         mController.setTitle(playTitleInfo);
 
         stopParse();
+        initParseLoadFound();
         if (mVideoView != null) mVideoView.release();
         subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex + "-" + vs.name + "-subt";
         progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex;

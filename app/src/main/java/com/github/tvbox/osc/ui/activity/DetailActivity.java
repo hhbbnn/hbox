@@ -488,11 +488,25 @@ public class DetailActivity extends BaseActivity {
             }
             if (canSelect)
                 vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).selected = true;
+        }        
+        
+        List<VodInfo.VodSeries> list = vodInfo.seriesMap.get(vodInfo.playFlag);
+        int index = 0;
+        for (VodInfo.VodSeries vodSeries : list) {
+            index++;
+            if (TextUtils.isEmpty(vodSeries.name)) {
+                if (list.size() == 1) {
+                    vodSeries.name = vodInfo.name;
+                }
+                if (TextUtils.isEmpty(vodSeries.name)) {
+                    vodSeries.name = "" + index;
+                }
+            }
         }
 
         // Dynamic series list width
         Paint pFont = new Paint();
-        List<VodInfo.VodSeries> list = vodInfo.seriesMap.get(vodInfo.playFlag);
+        //List<VodInfo.VodSeries> list = vodInfo.seriesMap.get(vodInfo.playFlag);
         int listSize = list.size();
         int w = 1;
         for (int i = 0; i < listSize; ++i) {
@@ -874,8 +888,7 @@ public class DetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-    	registerActionReceiver(false);
+    protected void onDestroy() {    	
         super.onDestroy();
         // 注销广播接收器
         if (mHomeKeyReceiver != null) {
