@@ -816,7 +816,8 @@ public class PlayFragment extends BaseLazyFragment {
                 if (mVideoView != null) {
                     mVideoView.release();
                     if (finalUrl != null) {
-                        String url = finalUrl;                        
+                        String url = finalUrl;
+                        videoURL = url;                        
                         try {
                             int playerType = mVodPlayerCfg.getInt("pl");
                             // takagen99: Check for External Player
@@ -1853,18 +1854,8 @@ public class PlayFragment extends BaseLazyFragment {
             super.onPageFinished(view, url);
             String click = sourceBean.getClickSelector();
             LOG.i("onPageFinished url:" + url);
-
             if (!click.isEmpty()) {
-                String selector;
-                if (click.contains(";")) {
-                    if (!url.contains(click.split(";")[0])) return;
-                    selector = click.split(";")[1];
-                } else {
-                    selector = click.trim();
-                }
-                String js = "$(\"" + selector + "\").click();";
-                LOG.i("javascript:" + js);
-                mSysWebView.loadUrl("javascript:" + js);
+                mSysWebView.loadUrl("javascript:" + click);
             }
         }
 

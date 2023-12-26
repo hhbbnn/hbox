@@ -71,6 +71,7 @@
     <string name="mn_theme">Theme</string>
     <string name="mn_about">About</string>
     <string name="mn_purify">Skip Ad</string>
+    <string name="mn_reset">resetApp</string>
 
     // Settings Dialog Pop-Up //
     <string name="dia_source">Select Source</string>
@@ -116,6 +117,8 @@
     <string name="act_hist">History</string>
     <string name="act_hist_sel">Select to Remove</string>
     <string name="act_hist_rm">Remove</string>
+    <string name="act_live_play_empty_live_url">The live url is not configured, please go to the settings page to configure it</string>
+    <string name="act_live_play_empty_channel">The channel list is empty</string>
     <string name="act_search">Search</string>
     <string name="act_search_clr">Clear</string>
     <string name="act_search_del">Backspace</string>
