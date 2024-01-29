@@ -2,10 +2,12 @@ package com.github.tvbox.osc.viewmodel;
 
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
@@ -64,6 +66,32 @@ public class SourceViewModel extends ViewModel {
     public MutableLiveData<AbsXml> quickSearchResult;
     public MutableLiveData<AbsXml> detailResult;
     public MutableLiveData<JSONObject> playResult;
+    private ExecutorService searchExecutorService;
+    
+    public void initExecutor() {
+        if (searchExecutorService != null) {
+            searchExecutorService.shutdownNow();
+            searchExecutorService = null;
+            JsLoader.stopAll();
+        }
+        searchExecutorService = Executors.newFixedThreadPool(5);
+    }
+    
+    public void execute(Runnable runnable) {
+        if (searchExecutorService != null) {
+            searchExecutorService.execute(runnable);
+        }
+    }
+    
+    public List<Runnable> shutdownNow() {
+        return searchExecutorService == null ? new ArrayList<>() : searchExecutorService.shutdownNow();
+    }
+
+    public void destroyExecutor() {
+        if (searchExecutorService != null) {
+            searchExecutorService = null;
+        }
+    }
 
     public SourceViewModel() {
         sortResult = new MutableLiveData<>();
@@ -445,8 +473,11 @@ public class SourceViewModel extends ViewModel {
         }
         String id = urlid; 
         SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
-		if (sourceBean == null)
-			detailResult.postValue(null);
+		if (sourceBean == null) {
+            detailResult.postValue(null);
+            Log.e("sourceBean", "get sourceBean got null, this should not be happended, maybe apiconfig get from http failed and use cache, sourceKey is " + sourceKey);
+            return;
+        }
         int type = sourceBean.getType();
         if (type == 3) {
             spThreadPool.execute(new Runnable() {
