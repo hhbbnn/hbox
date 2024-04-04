@@ -35,7 +35,7 @@ import com.orhanobut.hawk.Hawk;
 import java.util.Locale;
 import java.util.Map;
 
-import com.github.anilbeesetti.nextlib.media3ext.ffdecoder.NextRenderersFactory;
+import io.github.anilbeesetti.nextlib.media3ext.ffdecoder.NextRenderersFactory;
 import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
