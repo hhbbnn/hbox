@@ -251,10 +251,8 @@ public class ApiConfig {
             if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
                 if (jarLoader.load(cache.getAbsolutePath())) {
                     callback.success();
-                } else {
-                    callback.error("");
+                    return;
                 }
-                return;
             }
         }
 
@@ -266,7 +264,7 @@ public class ApiConfig {
                 .execute(new AbsCallback<File>() {
 
                     @Override
-                    public File convertResponse(okhttp3.Response response) throws Throwable {
+                    public File convertResponse(okhttp3.Response response){
                         File cacheDir = cache.getParentFile();
                         assert cacheDir != null;
                         if (!cacheDir.exists()) cacheDir.mkdirs();
@@ -279,7 +277,8 @@ public class ApiConfig {
                                 LOG.i("echo---jar Response: " + respData);
                                 byte[] imgJar = getImgJar(respData);
                                 if (imgJar == null || imgJar.length == 0) {
-                                    throw new IOException("Generated JAR data is empty");
+                                    LOG.e("echo---Generated JAR data is empty");
+                                    callback.error("JAR data is empty");
                                 }
                                 fos.write(imgJar);
                             } else {
@@ -311,7 +310,7 @@ public class ApiConfig {
                                 }
                             } catch (Exception e) {
                                 LOG.e("echo---jar Loader threw exception: " + e.getMessage());
-                                callback.error("加载异常: " + e.getMessage());
+                                callback.error("JAR加载异常: " + e.getMessage());
                             }
                         } else {
                             LOG.e("echo---jar File not found");
@@ -325,6 +324,7 @@ public class ApiConfig {
                         if (ex != null) {
                             LOG.i("echo---jar Request failed: " + ex.getMessage());
                         }
+                        if(cache.exists())jarLoader.load(cache.getAbsolutePath());
                         callback.error(ex != null ? "从网络上加载jar失败：" + ex.getMessage() : "未知网络错误");
                     }
                 });
@@ -344,7 +344,7 @@ public class ApiConfig {
 
     private static  String jarCache ="true";
     private void parseJson(String apiUrl, String jsonStr) {
-        pyLoader.setConfig(jsonStr);
+//        pyLoader.setConfig(jsonStr);
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         jarCache = DefaultConfig.safeJsonString(infoJson, "jarCache", "true");
         // spider
@@ -373,15 +373,12 @@ public class ApiConfig {
             }
             sb.setHide(DefaultConfig.safeJsonInt(obj, "hide", 0));
             sb.setPlayerUrl(DefaultConfig.safeJsonString(obj, "playUrl", ""));
-            if (obj.has("ext") && (obj.get("ext").isJsonObject() || obj.get("ext").isJsonArray())) {
-                sb.setExt(obj.get("ext").toString());
-            } else {
-                sb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
-            }
+            sb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
             sb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
             sb.setClickSelector(DefaultConfig.safeJsonString(obj, "click", ""));
+            sb.setStyle(DefaultConfig.safeJsonString(obj, "style", ""));
             if (firstSite == null && sb.getHide() == 0)
                 firstSite = sb;
             sourceBeanList.put(siteKey, sb);
@@ -605,17 +602,17 @@ public class ApiConfig {
         String defaultIJKADS = "{\"ijk\":[{\"options\":[{\"name\":\"opensles\",\"category\":4,\"value\":\"0\"},{\"name\":\"overlay-format\",\"category\":4,\"value\":\"842225234\"},{\"name\":\"framedrop\",\"category\":4,\"value\":\"0\"},{\"name\":\"soundtouch\",\"category\":4,\"value\":\"1\"},{\"name\":\"start-on-prepared\",\"category\":4,\"value\":\"1\"},{\"name\":\"http-detect-rangeupport\",\"category\":1,\"value\":\"0\"},{\"name\":\"fflags\",\"category\":1,\"value\":\"fastseek\"},{\"name\":\"skip_loop_filter\",\"category\":2,\"value\":\"48\"},{\"name\":\"reconnect\",\"category\":4,\"value\":\"1\"},{\"name\":\"enable-accurate-seek\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"0\"},{\"name\":\"dns_cache_timeout\",\"category\":1,\"value\":\"600000000\"}],\"group\":\"软解码\"},{\"options\":[{\"name\":\"opensles\",\"category\":4,\"value\":\"0\"},{\"name\":\"overlay-format\",\"category\":4,\"value\":\"842225234\"},{\"name\":\"framedrop\",\"category\":4,\"value\":\"0\"},{\"name\":\"soundtouch\",\"category\":4,\"value\":\"1\"},{\"name\":\"start-on-prepared\",\"category\":4,\"value\":\"1\"},{\"name\":\"http-detect-rangeupport\",\"category\":1,\"value\":\"0\"},{\"name\":\"fflags\",\"category\":1,\"value\":\"fastseek\"},{\"name\":\"skip_loop_filter\",\"category\":2,\"value\":\"48\"},{\"name\":\"reconnect\",\"category\":4,\"value\":\"1\"},{\"name\":\"enable-accurate-seek\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"1\"},{\"name\":\"dns_cache_timeout\",\"category\":1,\"value\":\"600000000\"}],\"group\":\"硬解码\"}],\"ads\":[\"mimg.0c1q0l.cn\",\"www.googletagmanager.com\",\"www.google-analytics.com\",\"mc.usihnbcq.cn\",\"mg.g1mm3d.cn\",\"mscs.svaeuzh.cn\",\"cnzz.hhttm.top\",\"tp.vinuxhome.com\",\"cnzz.mmstat.com\",\"www.baihuillq.com\",\"s23.cnzz.com\",\"z3.cnzz.com\",\"c.cnzz.com\",\"stj.v1vo.top\",\"z12.cnzz.com\",\"img.mosflower.cn\",\"tips.gamevvip.com\",\"ehwe.yhdtns.com\",\"xdn.cqqc3.com\",\"www.jixunkyy.cn\",\"sp.chemacid.cn\",\"hm.baidu.com\",\"s9.cnzz.com\",\"z6.cnzz.com\",\"um.cavuc.com\",\"mav.mavuz.com\",\"wofwk.aoidf3.com\",\"z5.cnzz.com\",\"xc.hubeijieshikj.cn\",\"tj.tianwenhu.com\",\"xg.gars57.cn\",\"k.jinxiuzhilv.com\",\"cdn.bootcss.com\",\"ppl.xunzhuo123.com\",\"xomk.jiangjunmh.top\",\"img.xunzhuo123.com\",\"z1.cnzz.com\",\"s13.cnzz.com\",\"xg.huataisangao.cn\",\"z7.cnzz.com\",\"xg.huataisangao.cn\",\"z2.cnzz.com\",\"s96.cnzz.com\",\"q11.cnzz.com\",\"thy.dacedsfa.cn\",\"xg.whsbpw.cn\",\"s19.cnzz.com\",\"z8.cnzz.com\",\"s4.cnzz.com\",\"f5w.as12df.top\",\"ae01.alicdn.com\",\"www.92424.cn\",\"k.wudejia.com\",\"vivovip.mmszxc.top\",\"qiu.xixiqiu.com\",\"cdnjs.hnfenxun.com\",\"cms.qdwght.com\"]}";
         JsonObject defaultJson = new Gson().fromJson(defaultIJKADS, JsonObject.class);
         // 广告地址
-        if (AdBlocker.isEmpty()) {
-//            AdBlocker.clear();
+        if(AdBlocker.isEmpty()){
+            //默认广告拦截
+            for (JsonElement host : defaultJson.getAsJsonArray("ads")) {
+                AdBlocker.addAdHost(host.getAsString());
+            }
             //追加的广告拦截
-            if (infoJson.has("ads")) {
+            if(infoJson.has("ads")){
                 for (JsonElement host : infoJson.getAsJsonArray("ads")) {
-                    AdBlocker.addAdHost(host.getAsString());
-                }
-            } else {
-                //默认广告拦截
-                for (JsonElement host : defaultJson.getAsJsonArray("ads")) {
-                    AdBlocker.addAdHost(host.getAsString());
+                    if(!AdBlocker.hasHost(host.getAsString())){
+                        AdBlocker.addAdHost(host.getAsString());
+                    }
                 }
             }
         }
